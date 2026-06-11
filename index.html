@@ -1,0 +1,900 @@
+<!doctype html>
+<html lang="en" class="h-full">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Potion &amp; Pages</title>
+  <script src="https://cdn.tailwindcss.com/3.4.17"></script>
+  <link href="https://fonts.googleapis.com/css2?family=Cinzel+Decorative:wght@400;700&family=Cormorant+Garamond:ital,wght@0,400;0,600;1,400&display=swap" rel="stylesheet">
+  <style>
+    .card-back {
+      background: linear-gradient(135deg, #1a1a2e 0%, #16213e 50%, #0f3460 100%);
+      border: 2px solid #c9a961;
+      box-shadow: 0 0 20px rgba(201, 169, 97, 0.3);
+    }
+    .card-front {
+      background: linear-gradient(180deg, #fdf6e3 0%, #f5e6c8 100%);
+      border: 2px solid #c9a961;
+    }
+    .card-container {
+      perspective: 1000px;
+    }
+    .card-inner {
+      transition: transform 0.8s cubic-bezier(0.4, 0, 0.2, 1);
+      transform-style: preserve-3d;
+    }
+    .card-inner.flipped {
+      transform: rotateY(180deg);
+    }
+    .card-face {
+      backface-visibility: hidden;
+      -webkit-backface-visibility: hidden;
+      position: absolute;
+      inset: 0;
+      border-radius: 12px;
+    }
+    .card-face-back {
+      transform: rotateY(0deg);
+    }
+    .card-face-front {
+      transform: rotateY(180deg);
+    }
+    @keyframes float {
+      0%, 100% { transform: translateY(0); }
+      50% { transform: translateY(-8px); }
+    }
+    @keyframes sparkle {
+      0%, 100% { opacity: 0.3; }
+      50% { opacity: 1; }
+    }
+    .star { animation: sparkle 2s ease-in-out infinite; }
+    .floating { animation: float 3s ease-in-out infinite; }
+    @keyframes fadeUp {
+      from { opacity: 0; transform: translateY(20px); }
+      to { opacity: 1; transform: translateY(0); }
+    }
+    .fade-up {
+      animation: fadeUp 0.6s ease-out forwards;
+      opacity: 0;
+    }
+
+    /* Rider-Waite card style */
+    .rw-card-svg {
+      image-rendering: crisp-edges;
+    }
+  </style>
+</head>
+<body class="h-full">
+  <div id="app" class="w-full h-full overflow-auto" style="background: linear-gradient(180deg, #0a0a1a 0%, #1a1a2e 40%, #0f3460 100%); font-family: 'Cormorant Garamond', serif;">
+    <!-- Stars background -->
+    <div class="fixed inset-0 pointer-events-none overflow-hidden" id="stars-bg"></div>
+
+    <!-- Main content -->
+    <div class="relative z-10 flex flex-col items-center min-h-full px-4 py-12">
+
+      <!-- Header -->
+      <header class="text-center mb-12 fade-up" style="animation-delay: 0.1s;">
+        <div class="floating mb-4">
+          <svg width="48" height="48" viewBox="0 0 48 48" class="mx-auto" style="color: #c9a961;">
+            <circle cx="24" cy="24" r="20" fill="none" stroke="currentColor" stroke-width="1.5"/>
+            <circle cx="24" cy="24" r="8" fill="none" stroke="currentColor" stroke-width="1"/>
+            <path d="M24 4 L24 12 M24 36 L24 44 M4 24 L12 24 M36 24 L44 24" stroke="currentColor" stroke-width="1"/>
+            <path d="M10 10 L16 16 M32 32 L38 38 M38 10 L32 16 M16 32 L10 38" stroke="currentColor" stroke-width="0.8"/>
+          </svg>
+        </div>
+        <h1 id="site-title" class="text-4xl md:text-5xl font-bold mb-3" style="font-family: 'Cinzel Decorative', serif; color: #c9a961;">Potion &amp; Pages</h1>
+        <p id="subtitle" class="text-lg md:text-xl" style="color: #a0aec0;">Unveil the whispers of the cards</p>
+      </header>
+
+      <!-- Spread selector -->
+      <div class="flex gap-3 mb-10 fade-up" style="animation-delay: 0.3s;">
+        <button onclick="setSpread(1)" id="btn-1" class="spread-btn px-4 py-2 rounded-full text-sm transition-all" style="border: 1px solid #c9a961; color: #c9a961; background: transparent;">Single Card</button>
+        <button onclick="setSpread(3)" id="btn-3" class="spread-btn px-4 py-2 rounded-full text-sm transition-all" style="border: 1px solid rgba(201,169,97,0.4); color: rgba(201,169,97,0.6); background: transparent;">Past · Present · Future</button>
+      </div>
+
+      <!-- Draw button -->
+      <button id="draw-btn" onclick="drawCards()" class="mb-12 px-8 py-3 rounded-full text-lg font-semibold transition-all hover:scale-105 active:scale-95 fade-up" style="animation-delay: 0.5s; background: linear-gradient(135deg, #c9a961, #a07c3a); color: #0a0a1a; font-family: 'Cinzel Decorative', serif; box-shadow: 0 4px 20px rgba(201,169,97,0.4);">
+        Draw Cards
+      </button>
+
+      <!-- Cards area -->
+      <div id="cards-area" class="flex flex-wrap justify-center gap-6 md:gap-8 mb-10 max-w-4xl w-full"></div>
+
+      <!-- Reading area -->
+      <div id="reading-area" class="max-w-2xl w-full text-center px-4"></div>
+    </div>
+  </div>
+
+  <script>
+// ─── TAROT DECK ────────────────────────────────────────────────────────────────
+const tarotDeck = [
+  // Major Arcana
+  { name: "The Fool",         numeral: "0",    suit: "major",     meaning: "New beginnings, spontaneity, innocence. A leap of faith into the unknown awaits you." },
+  { name: "The Magician",     numeral: "I",    suit: "major",     meaning: "Manifestation, resourcefulness, power. You have all the tools you need to succeed." },
+  { name: "The High Priestess",numeral:"II",   suit: "major",     meaning: "Intuition, mystery, inner knowledge. Trust your instincts and look beyond the surface." },
+  { name: "The Empress",      numeral: "III",  suit: "major",     meaning: "Abundance, nurturing, fertility. Creative energy flows through you freely." },
+  { name: "The Emperor",      numeral: "IV",   suit: "major",     meaning: "Authority, structure, stability. Take command of your situation with confidence." },
+  { name: "The Hierophant",   numeral: "V",    suit: "major",     meaning: "Tradition, wisdom, spiritual guidance. Seek counsel from those who have walked before." },
+  { name: "The Lovers",       numeral: "VI",   suit: "major",     meaning: "Love, harmony, choices. A meaningful connection or decision shapes your path." },
+  { name: "The Chariot",      numeral: "VII",  suit: "major",     meaning: "Determination, willpower, triumph. Harness opposing forces to move forward." },
+  { name: "Strength",         numeral: "VIII", suit: "major",     meaning: "Courage, patience, inner power. Gentle persistence overcomes all obstacles." },
+  { name: "The Hermit",       numeral: "IX",   suit: "major",     meaning: "Introspection, solitude, wisdom. Withdraw to find the light within yourself." },
+  { name: "Wheel of Fortune", numeral: "X",    suit: "major",     meaning: "Cycles, fate, turning points. The wheel spins — embrace the change ahead." },
+  { name: "Justice",          numeral: "XI",   suit: "major",     meaning: "Fairness, truth, accountability. What is sown shall be reaped in equal measure." },
+  { name: "The Hanged Man",   numeral: "XII",  suit: "major",     meaning: "Surrender, new perspective, letting go. Release control to gain understanding." },
+  { name: "Death",            numeral: "XIII", suit: "major",     meaning: "Transformation, endings, renewal. Something must end for the new to begin." },
+  { name: "Temperance",       numeral: "XIV",  suit: "major",     meaning: "Balance, moderation, patience. Blend opposing elements into harmony." },
+  { name: "The Devil",        numeral: "XV",   suit: "major",     meaning: "Bondage, materialism, shadow self. Recognize the chains you have placed upon yourself." },
+  { name: "The Tower",        numeral: "XVI",  suit: "major",     meaning: "Upheaval, revelation, sudden change. What crumbles was built on false foundations." },
+  { name: "The Star",         numeral: "XVII", suit: "major",     meaning: "Hope, inspiration, serenity. After darkness, the stars guide you home." },
+  { name: "The Moon",         numeral: "XVIII",suit: "major",     meaning: "Illusion, fear, the subconscious. Not all is as it seems — trust your deeper knowing." },
+  { name: "The Sun",          numeral: "XIX",  suit: "major",     meaning: "Joy, success, vitality. Bask in the warmth of clarity and celebration." },
+  { name: "Judgement",        numeral: "XX",   suit: "major",     meaning: "Rebirth, calling, absolution. Rise to your higher purpose without hesitation." },
+  { name: "The World",        numeral: "XXI",  suit: "major",     meaning: "Completion, integration, accomplishment. A cycle reaches its fulfillment." },
+  // Wands
+  { name: "Ace of Wands",     numeral: "A",    suit: "wands",     meaning: "Inspiration, new opportunities, growth. Creative fire ignites within you." },
+  { name: "Two of Wands",     numeral: "II",   suit: "wands",     meaning: "Planning, making decisions, leaving home. Hold your vision with confidence." },
+  { name: "Three of Wands",   numeral: "III",  suit: "wands",     meaning: "Foresight, exploration, progress. Your ventures expand beyond horizons." },
+  { name: "Four of Wands",    numeral: "IV",   suit: "wands",     meaning: "Celebration, harmony, home. Joy and stability anchor your foundation." },
+  { name: "Five of Wands",    numeral: "V",    suit: "wands",     meaning: "Conflict, competition, tension. Navigate differences with grace and wisdom." },
+  { name: "Six of Wands",     numeral: "VI",   suit: "wands",     meaning: "Victory, recognition, success. Your efforts earn well-deserved acclaim." },
+  { name: "Seven of Wands",   numeral: "VII",  suit: "wands",     meaning: "Perseverance, determination, challenge. Stand firm in your convictions." },
+  { name: "Eight of Wands",   numeral: "VIII", suit: "wands",     meaning: "Speed, movement, news. Swift progress carries you forward with momentum." },
+  { name: "Nine of Wands",    numeral: "IX",   suit: "wands",     meaning: "Resilience, courage, testing. You near your goal — persevere a little longer." },
+  { name: "Ten of Wands",     numeral: "X",    suit: "wands",     meaning: "Burden, completion, hardship. Recognize when to release what no longer serves." },
+  { name: "Page of Wands",    numeral: "P",    suit: "wands",     meaning: "Enthusiasm, exploration, free spirit. Curiosity sparks adventure and discovery." },
+  { name: "Knight of Wands",  numeral: "Kn",   suit: "wands",     meaning: "Energy, passion, action. Embrace bold moves with fiery determination." },
+  { name: "Queen of Wands",   numeral: "Q",    suit: "wands",     meaning: "Courage, confidence, independence. Channel your magnetic creative power." },
+  { name: "King of Wands",    numeral: "K",    suit: "wands",     meaning: "Leadership, vision, drive. Command respect through passionate authenticity." },
+  // Cups
+  { name: "Ace of Cups",      numeral: "A",    suit: "cups",      meaning: "Love, new emotions, compassion. Your heart opens to pure possibility." },
+  { name: "Two of Cups",      numeral: "II",   suit: "cups",      meaning: "Partnership, unity, connection. Deep bonds form between kindred souls." },
+  { name: "Three of Cups",    numeral: "III",  suit: "cups",      meaning: "Celebration, friendship, community. Joy multiplies when shared with others." },
+  { name: "Four of Cups",     numeral: "IV",   suit: "cups",      meaning: "Apathy, contemplation, meditation. Pause to reassess what truly matters." },
+  { name: "Five of Cups",     numeral: "V",    suit: "cups",      meaning: "Loss, sorrow, disappointment. Grief passes — healing light emerges ahead." },
+  { name: "Six of Cups",      numeral: "VI",   suit: "cups",      meaning: "Innocence, nostalgia, memories. Return to the purity of childlike wonder." },
+  { name: "Seven of Cups",    numeral: "VII",  suit: "cups",      meaning: "Illusion, choices, wishful thinking. Discern truth from fantasy within." },
+  { name: "Eight of Cups",    numeral: "VIII", suit: "cups",      meaning: "Abandonment, escapism, seeking. Sometimes moving forward means leaving behind." },
+  { name: "Nine of Cups",     numeral: "IX",   suit: "cups",      meaning: "Satisfaction, fulfillment, abundance. Wishes manifest and dreams come true." },
+  { name: "Ten of Cups",      numeral: "X",    suit: "cups",      meaning: "Harmony, happiness, family. Complete emotional fulfillment surrounds you." },
+  { name: "Page of Cups",     numeral: "P",    suit: "cups",      meaning: "Creativity, sensitivity, openness. Messages of love and inspiration arrive." },
+  { name: "Knight of Cups",   numeral: "Kn",   suit: "cups",      meaning: "Romance, charm, idealism. Follow your heart with poetic devotion." },
+  { name: "Queen of Cups",    numeral: "Q",    suit: "cups",      meaning: "Compassion, intuition, nurturing. Emotional wisdom and empathy flow freely." },
+  { name: "King of Cups",     numeral: "K",    suit: "cups",      meaning: "Emotional balance, diplomacy, calm. Master your feelings with quiet strength." },
+  // Swords
+  { name: "Ace of Swords",    numeral: "A",    suit: "swords",    meaning: "Truth, clarity, breakthrough. Sharp insight cuts through confusion instantly." },
+  { name: "Two of Swords",    numeral: "II",   suit: "swords",    meaning: "Stalemate, difficult choices, tension. Pause before deciding — both paths matter." },
+  { name: "Three of Swords",  numeral: "III",  suit: "swords",    meaning: "Sorrow, heartbreak, difficult truths. Pain teaches us what we cherish most." },
+  { name: "Four of Swords",   numeral: "IV",   suit: "swords",    meaning: "Rest, respite, truce. Stillness restores your spirit and sharpens your mind." },
+  { name: "Five of Swords",   numeral: "V",    suit: "swords",    meaning: "Defeat, conflict, loss. Not every battle worth winning comes without cost." },
+  { name: "Six of Swords",    numeral: "VI",   suit: "swords",    meaning: "Travel, transition, moving on. Smooth passage carries you toward calmer waters." },
+  { name: "Seven of Swords",  numeral: "VII",  suit: "swords",    meaning: "Deception, betrayal, stealth. Question what is hidden and what remains unclear." },
+  { name: "Eight of Swords",  numeral: "VIII", suit: "swords",    meaning: "Restriction, confusion, powerlessness. Your bonds are looser than you believe." },
+  { name: "Nine of Swords",   numeral: "IX",   suit: "swords",    meaning: "Anxiety, nightmares, despair. Mental torment yields to dawn's gentle light." },
+  { name: "Ten of Swords",    numeral: "X",    suit: "swords",    meaning: "Ending, betrayal, rock bottom. What has fallen makes space for rebirth." },
+  { name: "Page of Swords",   numeral: "P",    suit: "swords",    meaning: "Curiosity, vigilance, new ideas. Truth-seeking brings important revelations." },
+  { name: "Knight of Swords", numeral: "Kn",   suit: "swords",    meaning: "Logic, action, impulsiveness. Charge forward with intellect as your weapon." },
+  { name: "Queen of Swords",  numeral: "Q",    suit: "swords",    meaning: "Clarity, communication, independence. Speak your truth with unflinching honesty." },
+  { name: "King of Swords",   numeral: "K",    suit: "swords",    meaning: "Authority, intellect, absolute truth. Command through clarity and reasoned wisdom." },
+  // Pentacles
+  { name: "Ace of Pentacles", numeral: "A",    suit: "pentacles", meaning: "Prosperity, opportunity, abundance. Material blessing and fortune arrive." },
+  { name: "Two of Pentacles", numeral: "II",   suit: "pentacles", meaning: "Balance, adaptability, juggling. Manage multiple responsibilities with grace." },
+  { name: "Three of Pentacles",numeral:"III",  suit: "pentacles", meaning: "Teamwork, collaboration, learning. Shared effort creates masterful results." },
+  { name: "Four of Pentacles",numeral: "IV",   suit: "pentacles", meaning: "Security, control, possessiveness. Hold your resources wisely, but not too tight." },
+  { name: "Five of Pentacles",numeral: "V",    suit: "pentacles", meaning: "Hardship, loss, struggle. Support exists — reach out even when isolated." },
+  { name: "Six of Pentacles", numeral: "VI",   suit: "pentacles", meaning: "Charity, generosity, fairness. Give freely and abundance returns tenfold." },
+  { name: "Seven of Pentacles",numeral:"VII",  suit: "pentacles", meaning: "Effort, patience, growth. Your investment begins to show its promise." },
+  { name: "Eight of Pentacles",numeral:"VIII", suit: "pentacles", meaning: "Skill, practice, mastery. Dedication to your craft refines your expertise." },
+  { name: "Nine of Pentacles",numeral: "IX",   suit: "pentacles", meaning: "Abundance, luxury, self-sufficiency. Your efforts bloom into well-earned reward." },
+  { name: "Ten of Pentacles", numeral: "X",    suit: "pentacles", meaning: "Wealth, inheritance, legacy. Generations of abundance secure your foundation." },
+  { name: "Page of Pentacles",numeral: "P",    suit: "pentacles", meaning: "Opportunity, study, new venture. Potential ripens — nurture it with dedication." },
+  { name: "Knight of Pentacles",numeral:"Kn",  suit: "pentacles", meaning: "Reliability, efficiency, hard work. Steady progress yields substantial gains." },
+  { name: "Queen of Pentacles",numeral:"Q",    suit: "pentacles", meaning: "Nurturing, practicality, abundance. Cultivate prosperity through caring action." },
+  { name: "King of Pentacles",numeral: "K",    suit: "pentacles", meaning: "Wealth, leadership, abundance. Command material success through expertise." }
+];
+
+// ─── RIDER-WAITE STYLE SVG ILLUSTRATIONS ───────────────────────────────────────
+// Each card gets a miniature hand-drawn-style illustration inspired by the Smith-Waite deck.
+function getCardSVG(card) {
+  const suitPalette = {
+    major:     { bg: "#f5edd8", border: "#6b4f1a", ink: "#6b4f1a" },
+    wands:     { bg: "#f5edd8", border: "#7a3a10", ink: "#7a3a10" },
+    cups:      { bg: "#f5edd8", border: "#1e3f7a", ink: "#1e3f7a" },
+    swords:    { bg: "#f5edd8", border: "#2e4a5a", ink: "#2e4a5a" },
+    pentacles: { bg: "#f5edd8", border: "#2d5016", ink: "#2d5016" },
+  };
+  const p = suitPalette[card.suit] || suitPalette.major;
+
+  const k = p.ink;
+
+  // Card shell — parchment bg, double border, numeral + name
+  const open = () => `<svg width="140" height="220" viewBox="0 0 140 220" xmlns="http://www.w3.org/2000/svg">
+    <rect x="0" y="0" width="140" height="220" rx="6" fill="${p.bg}"/>
+    <rect x="3" y="3" width="134" height="214" rx="4" fill="none" stroke="${k}" stroke-width="1.8"/>
+    <rect x="8" y="8" width="124" height="204" rx="2" fill="none" stroke="${k}" stroke-width="0.5" stroke-dasharray="2,3"/>
+    <text x="70" y="21" font-size="8" text-anchor="middle" fill="${k}" font-family="serif" font-weight="bold">${card.numeral}</text>
+    <text x="70" y="214" font-size="7" text-anchor="middle" fill="${k}" font-family="serif">${card.name}</text>`;
+  const close = `</svg>`;
+
+  // ── MAJOR ARCANA ──
+  if (card.name === "The Fool") return open() + `
+    <!-- sky -->
+    <rect x="8" y="24" width="124" height="90" fill="${p.sky}"/>
+    <!-- mountains -->
+    <polygon points="8,114 40,60 72,114" fill="#ccc"/>
+    <polygon points="50,114 85,70 120,114" fill="#bbb"/>
+    <!-- ground -->
+    <rect x="8" y="114" width="124" height="78" fill="#d4b896"/>
+    <!-- cliff edge -->
+    <path d="M8 150 Q30 140 55 155 Q70 162 90 148 Q110 138 132 145 L132 114 L8 114Z" fill="#c8a870"/>
+    <!-- figure (fool) -->
+    <rect x="55" y="90" width="10" height="30" rx="2" fill="#8b4513"/><!-- body -->
+    <circle cx="60" cy="86" r="7" fill="#f5deb3"/><!-- head -->
+    <line x1="60" y1="100" x2="75" y2="92" stroke="#8b4513" stroke-width="2"/><!-- staff arm -->
+    <line x1="75" y1="92" x2="85" y2="85" stroke="#8b4513" stroke-width="1.5"/><!-- staff -->
+    <circle cx="85" cy="83" r="3" fill="#cc8800"/><!-- bundle -->
+    <line x1="60" y1="100" x2="50" y2="106" stroke="#8b4513" stroke-width="2"/><!-- other arm -->
+    <line x1="60" y1="120" x2="55" y2="138" stroke="#8b4513" stroke-width="2"/><!-- leg -->
+    <line x1="60" y1="120" x2="68" y2="136" stroke="#8b4513" stroke-width="2"/><!-- leg -->
+    <!-- dog -->
+    <ellipse cx="48" cy="128" rx="8" ry="5" fill="#daa520"/>
+    <circle cx="42" cy="124" r="4" fill="#daa520"/>
+    <!-- flower -->
+    <line x1="55" y1="100" x2="45" y2="94" stroke="#228b22" stroke-width="1"/>
+    <circle cx="44" cy="92" r="3" fill="#fff"/>
+    <!-- sun -->
+    <circle cx="110" cy="40" r="14" fill="#ffd700" opacity="0.8"/>
+    <circle cx="110" cy="40" r="10" fill="#ffec00"/>
+  ` + close;
+
+  if (card.name === "The Magician") return open() + `
+    <rect x="8" y="24" width="124" height="80" fill="${p.sky}"/>
+    <rect x="8" y="104" width="124" height="88" fill="#d4b896"/>
+    <!-- roses top -->
+    <circle cx="25" cy="35" r="5" fill="#c83232"/>
+    <circle cx="40" cy="30" r="4" fill="#c83232"/>
+    <circle cx="105" cy="35" r="5" fill="#c83232"/>
+    <circle cx="118" cy="30" r="4" fill="#c83232"/>
+    <!-- table -->
+    <rect x="40" y="110" width="60" height="5" rx="2" fill="#8b6914"/>
+    <line x1="45" y1="115" x2="45" y2="130" stroke="#8b6914" stroke-width="2"/>
+    <line x1="95" y1="115" x2="95" y2="130" stroke="#8b6914" stroke-width="2"/>
+    <!-- tools on table -->
+    <rect x="48" y="103" width="8" height="9" rx="1" fill="#ffd700"/><!-- wand -->
+    <rect x="60" y="104" width="6" height="7" fill="#2255a4"/><!-- cup -->
+    <polygon points="72,103 75,112 69,112" fill="#c0c0c0"/><!-- sword -->
+    <circle cx="83" cy="107" r="4" fill="#228b22"/><!-- pentacle -->
+    <!-- figure -->
+    <rect x="60" y="70" width="20" height="34" rx="3" fill="#e8e8ff"/><!-- robe -->
+    <circle cx="70" cy="64" r="8" fill="#f5deb3"/><!-- head -->
+    <line x1="70" y1="64" x2="70" y2="56" stroke="#ffd700" stroke-width="2"/><!-- wand raised -->
+    <circle cx="70" cy="54" r="3" fill="#ffd700"/>
+    <!-- infinity symbol over head -->
+    <path d="M58 50 Q62 45 66 50 Q70 55 74 50 Q78 45 82 50" fill="none" stroke="${p.border}" stroke-width="1.5"/>
+    <!-- belt of serpent -->
+    <path d="M60 90 Q70 85 80 90" fill="none" stroke="#cc8800" stroke-width="2"/>
+  ` + close;
+
+  if (card.name === "The High Priestess") return open() + `
+    <rect x="8" y="24" width="124" height="168" fill="#1a1a3e"/>
+    <!-- pillars -->
+    <rect x="12" y="40" width="18" height="120" rx="3" fill="#2a2a4a"/>
+    <text x="21" y="56" font-size="8" text-anchor="middle" fill="#c9a961" font-family="serif">B</text>
+    <rect x="110" y="40" width="18" height="120" rx="3" fill="#f5f5dc"/>
+    <text x="119" y="56" font-size="8" text-anchor="middle" fill="#1a1a3e" font-family="serif">J</text>
+    <!-- curtain veil -->
+    <rect x="30" y="50" width="80" height="110" fill="#2244aa" opacity="0.7"/>
+    <path d="M30 50 Q50 60 70 50 Q90 40 110 50" fill="#1a3388" opacity="0.8"/>
+    <!-- moon -->
+    <circle cx="70" cy="58" r="14" fill="#c0c0c0" opacity="0.7"/>
+    <circle cx="76" cy="54" r="10" fill="#1a1a3e"/>
+    <!-- figure -->
+    <rect x="52" y="90" width="36" height="50" rx="4" fill="#e8e8ff"/><!-- robe -->
+    <circle cx="70" cy="84" r="9" fill="#f5deb3"/><!-- head -->
+    <!-- cross on chest -->
+    <line x1="70" y1="97" x2="70" y2="107" stroke="#ffd700" stroke-width="2"/>
+    <line x1="65" y1="102" x2="75" y2="102" stroke="#ffd700" stroke-width="2"/>
+    <!-- scroll -->
+    <rect x="62" y="108" width="16" height="20" rx="1" fill="#fdf6e3"/>
+    <text x="70" y="119" font-size="5" text-anchor="middle" fill="#333" font-family="serif">TORA</text>
+    <!-- crown crescent -->
+    <path d="M62 76 Q70 68 78 76" fill="none" stroke="#ffd700" stroke-width="2"/>
+  ` + close;
+
+  if (card.name === "The Empress") return open() + `
+    <rect x="8" y="24" width="124" height="168" fill="#d4e8a0"/>
+    <!-- forest -->
+    <rect x="8" y="120" width="124" height="72" fill="#5c8a3c"/>
+    <polygon points="8,120 30,80 52,120" fill="#4a7230"/>
+    <polygon points="40,120 65,75 90,120" fill="#3d6128"/>
+    <polygon points="80,120 105,78 130,120" fill="#4a7230"/>
+    <polygon points="100,120 125,82 140,120" fill="#3d6128"/>
+    <!-- waterfall -->
+    <path d="M15 80 Q20 100 18 120" stroke="#6699cc" stroke-width="3" fill="none"/>
+    <!-- throne -->
+    <rect x="40" y="95" width="60" height="60" rx="4" fill="#cc8800"/>
+    <!-- figure seated -->
+    <ellipse cx="70" cy="115" rx="22" ry="30" fill="#cc4499"/><!-- gown -->
+    <circle cx="70" cy="88" r="10" fill="#f5deb3"/><!-- head -->
+    <!-- crown -->
+    <rect x="60" y="78" width="20" height="8" fill="#ffd700"/>
+    <polygon points="60,78 63,70 66,78" fill="#ffd700"/>
+    <polygon points="67,78 70,68 73,78" fill="#ffd700"/>
+    <polygon points="74,78 77,70 80,78" fill="#ffd700"/>
+    <!-- scepter -->
+    <line x1="88" y1="100" x2="100" y2="80" stroke="#8b6914" stroke-width="2"/>
+    <circle cx="100" cy="79" r="4" fill="#ffd700"/>
+    <!-- venus symbol on heart-shield -->
+    <circle cx="55" cy="110" r="6" fill="none" stroke="#cc2244" stroke-width="1.5"/>
+    <line x1="55" y1="116" x2="55" y2="122" stroke="#cc2244" stroke-width="1.5"/>
+    <line x1="51" y1="119" x2="59" y2="119" stroke="#cc2244" stroke-width="1.5"/>
+    <!-- wheat -->
+    <line x1="90" y1="135" x2="90" y2="115" stroke="#8b6914" stroke-width="1"/>
+    <ellipse cx="90" cy="113" rx="3" ry="5" fill="#daa520"/>
+    <line x1="100" y1="138" x2="98" y2="118" stroke="#8b6914" stroke-width="1"/>
+    <ellipse cx="98" cy="116" rx="3" ry="5" fill="#daa520"/>
+  ` + close;
+
+  if (card.name === "The Star") return open() + `
+    <rect x="8" y="24" width="124" height="168" fill="#0a1a40"/>
+    <!-- night sky stars -->
+    ${[...Array(14)].map((_,i)=>`<circle cx="${20+i*8}" cy="${35+Math.sin(i)*12}" r="${i%3===0?4:2}" fill="#ffd700" opacity="${i%3===0?0.9:0.6}"/>`).join('')}
+    <!-- water pool -->
+    <ellipse cx="70" cy="165" rx="50" ry="20" fill="#2255a4" opacity="0.6"/>
+    <!-- land -->
+    <rect x="8" y="145" width="124" height="47" fill="#6b4c1e"/>
+    <path d="M8 145 Q35 135 60 145 Q90 152 124 140 L124 145 L8 145Z" fill="#8b6914"/>
+    <!-- figure kneeling -->
+    <ellipse cx="75" cy="140" rx="12" ry="18" fill="#f0e6cc"/><!-- body -->
+    <circle cx="75" cy="120" r="9" fill="#f5deb3"/><!-- head -->
+    <!-- two jugs pouring water -->
+    <line x1="60" y1="130" x2="50" y2="148" stroke="#6699cc" stroke-width="2"/>
+    <line x1="90" y1="130" x2="98" y2="148" stroke="#6699cc" stroke-width="2"/>
+    <!-- large star 8-pointed -->
+    <polygon points="70,45 73,58 82,52 76,63 87,63 78,70 84,80 70,74 56,80 62,70 53,63 64,63 58,52 67,58" fill="#ffd700"/>
+    <circle cx="70" cy="63" r="5" fill="#fff"/>
+    <!-- tree with bird -->
+    <line x1="115" y1="145" x2="115" y2="115" stroke="#5c4020" stroke-width="3"/>
+    <ellipse cx="115" cy="110" rx="10" ry="12" fill="#228b22" opacity="0.8"/>
+    <ellipse cx="120" cy="107" rx="4" ry="3" fill="#228b22"/>
+  ` + close;
+
+  if (card.name === "The Moon") return open() + `
+    <rect x="8" y="24" width="124" height="168" fill="#0c1030"/>
+    <!-- moon -->
+    <circle cx="70" cy="55" r="22" fill="#d0c8a0" opacity="0.8"/>
+    <circle cx="80" cy="48" r="16" fill="#0c1030"/>
+    <!-- face on moon -->
+    <circle cx="66" cy="58" r="2" fill="#a09060"/>
+    <path d="M62 65 Q66 68 70 65" stroke="#a09060" stroke-width="1" fill="none"/>
+    <!-- towers -->
+    <rect x="20" y="110" width="16" height="60" fill="#443322"/>
+    <rect x="104" y="110" width="16" height="60" fill="#443322"/>
+    <polygon points="20,110 28,95 36,110" fill="#554433"/>
+    <polygon points="104,110 112,95 120,110" fill="#554433"/>
+    <!-- path through water -->
+    <path d="M8 192 Q30 180 70 185 Q100 188 132 180 L132 192Z" fill="#334466"/>
+    <!-- dog and wolf -->
+    <ellipse cx="40" cy="148" rx="9" ry="6" fill="#8b7355"/>
+    <circle cx="33" cy="143" r="5" fill="#8b7355"/>
+    <ellipse cx="100" cy="148" rx="9" ry="6" fill="#998877"/>
+    <circle cx="107" cy="143" r="5" fill="#998877"/>
+    <!-- crayfish from water -->
+    <circle cx="70" cy="172" r="6" fill="#cc4422"/>
+    <line x1="64" y1="172" x2="58" y2="168" stroke="#cc4422" stroke-width="1.5"/>
+    <line x1="64" y1="174" x2="57" y2="176" stroke="#cc4422" stroke-width="1.5"/>
+    <line x1="76" y1="172" x2="82" y2="168" stroke="#cc4422" stroke-width="1.5"/>
+    <line x1="76" y1="174" x2="83" y2="176" stroke="#cc4422" stroke-width="1.5"/>
+    <!-- yods (drops) -->
+    ${[...Array(8)].map((_,i)=>`<ellipse cx="${38+i*10}" cy="${90+Math.sin(i*1.3)*8}" rx="2" ry="3" fill="#ffd700" opacity="0.6"/>`).join('')}
+  ` + close;
+
+  if (card.name === "The Sun") return open() + `
+    <rect x="8" y="24" width="124" height="168" fill="#ffd700" opacity="0.6"/>
+    <rect x="8" y="24" width="124" height="168" fill="#ffe580"/>
+    <!-- sun -->
+    <circle cx="70" cy="65" r="28" fill="#ff8c00"/>
+    <circle cx="70" cy="65" r="20" fill="#ffd700"/>
+    <!-- sun rays -->
+    ${[...Array(16)].map((_,i)=>{
+      const a=i*22.5*Math.PI/180;
+      return `<line x1="${70+22*Math.cos(a)}" y1="${65+22*Math.sin(a)}" x2="${70+34*Math.cos(a)}" y2="${65+34*Math.sin(a)}" stroke="#ff6600" stroke-width="2"/>`;
+    }).join('')}
+    <!-- sunflowers -->
+    <circle cx="22" cy="110" r="8" fill="#ffa500"/>
+    <circle cx="22" cy="110" r="5" fill="#8b6914"/>
+    <line x1="22" y1="118" x2="22" y2="140" stroke="#228b22" stroke-width="2"/>
+    <circle cx="118" cy="112" r="7" fill="#ffa500"/>
+    <circle cx="118" cy="112" r="4" fill="#8b6914"/>
+    <line x1="118" y1="119" x2="118" y2="140" stroke="#228b22" stroke-width="2"/>
+    <!-- wall -->
+    <rect x="15" y="140" width="110" height="30" fill="#cc9966"/>
+    <!-- child on horse -->
+    <ellipse cx="70" cy="155" rx="14" ry="10" fill="#c8a464"/><!-- horse body -->
+    <circle cx="60" cy="148" r="7" fill="#c8a464"/><!-- horse head -->
+    <circle cx="70" cy="138" r="8" fill="#f5deb3"/><!-- child head -->
+    <rect x="62" y="146" width="16" height="18" rx="2" fill="#ff4444"/><!-- child body red flag -->
+    <!-- banner/flag -->
+    <line x1="78" y1="135" x2="78" y2="125" stroke="#8b4513" stroke-width="1.5"/>
+    <polygon points="78,125 92,128 78,131" fill="#cc2222"/>
+  ` + close;
+
+  if (card.name === "The Tower") return open() + `
+    <rect x="8" y="24" width="124" height="168" fill="#1a1010"/>
+    <!-- stormy sky -->
+    <rect x="8" y="24" width="124" height="80" fill="#331515"/>
+    <!-- lightning bolt -->
+    <polygon points="85,30 70,65 80,65 65,100 90,60 78,60" fill="#ffd700"/>
+    <!-- tower -->
+    <rect x="45" y="75" width="50" height="100" fill="#443322"/>
+    <rect x="48" y="80" width="44" height="95" fill="#554433"/>
+    <!-- crown top blown off -->
+    <rect x="42" y="68" width="56" height="12" fill="#aa8833"/>
+    <rect x="55" y="55" width="6" height="13" fill="#aa8833"/>
+    <rect x="70" y="52" width="6" height="16" fill="#aa8833"/>
+    <rect x="83" y="55" width="6" height="13" fill="#aa8833"/>
+    <!-- flame from top -->
+    <ellipse cx="70" cy="62" rx="15" ry="8" fill="#ff6600" opacity="0.9"/>
+    <ellipse cx="70" cy="58" rx="8" ry="6" fill="#ffaa00"/>
+    <!-- windows -->
+    <rect x="58" y="95" width="10" height="14" rx="2" fill="#ff6600" opacity="0.7"/>
+    <rect x="78" y="95" width="10" height="14" rx="2" fill="#ff6600" opacity="0.7"/>
+    <rect x="65" y="120" width="10" height="14" rx="2" fill="#ff4400" opacity="0.5"/>
+    <!-- falling figures -->
+    <circle cx="35" cy="130" r="5" fill="#f5deb3"/>
+    <line x1="35" y1="135" x2="28" y2="148" stroke="#cc3333" stroke-width="1.5"/>
+    <circle cx="105" cy="125" r="5" fill="#f5deb3"/>
+    <line x1="105" y1="130" x2="112" y2="145" stroke="#cc3333" stroke-width="1.5"/>
+    <!-- yods -->
+    ${[...Array(10)].map((_,i)=>`<ellipse cx="${25+i*10}" cy="${105+i*5}" rx="2" ry="3" fill="#ffd700" opacity="0.7"/>`).join('')}
+    <!-- rocks at base -->
+    <rect x="8" y="170" width="124" height="22" fill="#222"/>
+    <ellipse cx="30" cy="173" rx="12" ry="5" fill="#333"/>
+    <ellipse cx="110" cy="172" rx="10" ry="4" fill="#333"/>
+  ` + close;
+
+  if (card.name === "The World") return open() + `
+    <rect x="8" y="24" width="124" height="168" fill="#1a2a5e"/>
+    <!-- wreath oval -->
+    <ellipse cx="70" cy="108" rx="40" ry="55" fill="none" stroke="#228b22" stroke-width="6" stroke-dasharray="4,3"/>
+    <!-- inner wreath detail -->
+    <ellipse cx="70" cy="108" rx="36" ry="51" fill="none" stroke="#338833" stroke-width="2"/>
+    <!-- figure dancing -->
+    <ellipse cx="70" cy="105" rx="14" ry="22" fill="#cc44aa" opacity="0.8"/><!-- body veil -->
+    <circle cx="70" cy="82" r="8" fill="#f5deb3"/><!-- head -->
+    <!-- wands crossed -->
+    <line x1="60" y1="100" x2="52" y2="88" stroke="#8b6914" stroke-width="2"/>
+    <line x1="78" y1="100" x2="88" y2="88" stroke="#8b6914" stroke-width="2"/>
+    <!-- four corner symbols -->
+    <circle cx="22" cy="40" r="8" fill="#cc8822"/><!-- lion -->
+    <line x1="18" y1="38" x2="26" y2="38" stroke="#cc8822" stroke-width="1"/>
+    <line x1="22" y1="34" x2="22" y2="42" stroke="#cc8822" stroke-width="1"/>
+    <circle cx="118" cy="40" r="8" fill="#ffd700"/><!-- eagle -->
+    <polygon points="118,32 122,40 118,38 114,40" fill="#8b6914"/>
+    <circle cx="22" cy="175" r="8" fill="#cc4422"/><!-- bull -->
+    <line x1="18" y1="173" x2="26" y2="173" stroke="#cc4422" stroke-width="2"/>
+    <circle cx="118" cy="175" r="8" fill="#4466cc"/><!-- angel -->
+    <path d="M112 175 Q118 168 124 175" fill="#99aaff"/>
+    <!-- stars around wreath -->
+    ${[...Array(8)].map((_,i)=>{
+      const a=i*45*Math.PI/180;
+      return `<circle cx="${70+50*Math.cos(a)}" cy="${108+62*Math.sin(a)}" r="3" fill="#ffd700"/>`;
+    }).join('')}
+  ` + close;
+
+  if (card.name === "Death") return open() + `
+    <rect x="8" y="24" width="124" height="168" fill="#0a0a1a"/>
+    <!-- sunrise on horizon -->
+    <rect x="8" y="140" width="124" height="52" fill="#112233"/>
+    <rect x="8" y="155" width="124" height="37" fill="#1a3355"/>
+    <circle cx="70" cy="155" r="20" fill="#ff8c00" opacity="0.7"/>
+    <!-- river -->
+    <path d="M8 168 Q40 162 70 168 Q100 173 132 165 L132 192 L8 192Z" fill="#224488" opacity="0.7"/>
+    <!-- skeleton horseman -->
+    <!-- horse -->
+    <ellipse cx="65" cy="130" rx="28" ry="14" fill="#ddd"/>
+    <circle cx="40" cy="122" r="10" fill="#ddd"/><!-- horse head -->
+    <line x1="40" y1="132" x2="35" y2="148" stroke="#ddd" stroke-width="3"/>
+    <line x1="50" y1="138" x2="48" y2="152" stroke="#ddd" stroke-width="3"/>
+    <line x1="75" y1="138" x2="73" y2="154" stroke="#ddd" stroke-width="3"/>
+    <line x1="88" y1="135" x2="90" y2="150" stroke="#ddd" stroke-width="3"/>
+    <!-- skeleton rider -->
+    <rect x="58" y="105" width="16" height="22" rx="2" fill="#c8c8c8"/><!-- armor -->
+    <circle cx="66" cy="100" r="7" fill="#e8e8e8"/><!-- skull -->
+    <circle cx="63" cy="99" r="2" fill="#222"/><!-- eye socket -->
+    <circle cx="70" cy="99" r="2" fill="#222"/><!-- eye socket -->
+    <!-- black banner -->
+    <line x1="80" y1="90" x2="80" y2="110" stroke="#333" stroke-width="2"/>
+    <rect x="80" y="90" width="24" height="14" fill="#111"/>
+    <polygon points="88,96 92,91 96,96" fill="#fff" opacity="0.6"/>
+    <!-- fallen king -->
+    <ellipse cx="40" cy="152" rx="9" ry="5" fill="#ffd700"/><!-- crown -->
+    <circle cx="40" cy="158" r="6" fill="#f5deb3"/><!-- head -->
+    <!-- bishop kneeling -->
+    <ellipse cx="95" cy="148" rx="8" ry="12" fill="#fff8ee"/>
+    <path d="M90 138 Q95 132 100 138" fill="#fff" stroke="#999" stroke-width="1"/>
+    <!-- child flowers -->
+    <circle cx="78" cy="150" r="4" fill="#f5deb3"/>
+    <ellipse cx="78" cy="155" rx="5" ry="7" fill="#fff"/>
+    <circle cx="74" cy="148" r="2" fill="#ff6699"/>
+    <circle cx="82" cy="148" r="2" fill="#ff6699"/>
+  ` + close;
+
+  if (card.name === "The Hermit") return open() + `
+    <rect x="8" y="24" width="124" height="168" fill="#1a1a2a"/>
+    <!-- mountain peaks -->
+    <polygon points="8,192 50,90 92,192" fill="#223344"/>
+    <polygon points="40,192 90,80 140,192" fill="#1a2a3a"/>
+    <polygon points="70,192 110,100 140,150 140,192" fill="#223344"/>
+    <!-- snow caps -->
+    <polygon points="50,90 42,105 58,105" fill="#eee"/>
+    <polygon points="90,80 82,96 98,96" fill="#eee"/>
+    <!-- figure standing -->
+    <rect x="60" y="115" width="18" height="45" rx="4" fill="#555566"/><!-- robe -->
+    <circle cx="69" cy="109" r="8" fill="#f5deb3"/><!-- head -->
+    <!-- lantern (raised) -->
+    <line x1="76" y1="115" x2="88" y2="100" stroke="#8b8b8b" stroke-width="2"/>
+    <rect x="84" y="96" width="10" height="14" rx="2" fill="#aa9955"/>
+    <circle cx="89" cy="103" r="5" fill="#ffd700" opacity="0.8"/>
+    <!-- staff in other hand -->
+    <line x1="62" y1="120" x2="52" y2="165" stroke="#8b6914" stroke-width="2.5"/>
+    <!-- hood/beard -->
+    <path d="M62 108 Q69 100 76 108 Q72 120 69 118 Q66 120 62 108Z" fill="#888899"/>
+    <!-- stars in sky -->
+    <circle cx="25" cy="45" r="2" fill="#ffd700"/>
+    <circle cx="110" cy="38" r="2" fill="#ffd700"/>
+    <circle cx="45" cy="55" r="1.5" fill="#ffd700"/>
+    <circle cx="95" cy="50" r="1.5" fill="#ffd700"/>
+  ` + close;
+
+  if (card.name === "The Lovers") return open() + `
+    <rect x="8" y="24" width="124" height="168" fill="#ffe0b0"/>
+    <!-- sun/light at top -->
+    <circle cx="70" cy="45" r="18" fill="#ffd700" opacity="0.8"/>
+    ${[...Array(12)].map((_,i)=>{const a=i*30*Math.PI/180; return `<line x1="${70+20*Math.cos(a)}" y1="${45+20*Math.sin(a)}" x2="${70+28*Math.cos(a)}" y2="${45+28*Math.sin(a)}" stroke="#ff8c00" stroke-width="1.5"/>`;}).join('')}
+    <!-- angel in clouds -->
+    <ellipse cx="70" cy="65" rx="22" ry="12" fill="#e8e8ff" opacity="0.9"/>
+    <circle cx="70" cy="58" r="8" fill="#f5deb3"/><!-- angel face -->
+    <path d="M52 60 Q62 50 70 58 Q78 50 88 60" fill="#9999ff" opacity="0.7"/><!-- wings -->
+    <!-- landscape -->
+    <rect x="8" y="140" width="124" height="52" fill="#6b9b3c"/>
+    <!-- two figures -->
+    <!-- man (left) -->
+    <ellipse cx="45" cy="130" rx="10" ry="20" fill="#cc8833"/>
+    <circle cx="45" cy="108" r="9" fill="#f5deb3"/>
+    <!-- woman (right) -->
+    <ellipse cx="95" cy="128" rx="10" ry="22" fill="#cc4499"/>
+    <circle cx="95" cy="106" r="9" fill="#f5deb3"/>
+    <!-- tree of knowledge (right) with serpent -->
+    <line x1="108" y1="140" x2="108" y2="110" stroke="#5c4020" stroke-width="3"/>
+    <ellipse cx="112" cy="106" rx="12" ry="12" fill="#228b22" opacity="0.9"/>
+    <circle cx="115" cy="100" r="4" fill="#cc4422"/><!-- apple -->
+    <!-- snake on tree -->
+    <path d="M108 120 Q118 115 115 108" stroke="#228b22" stroke-width="2" fill="none"/>
+    <!-- tree of life (left) -->
+    <line x1="32" y1="140" x2="32" y2="112" stroke="#5c4020" stroke-width="3"/>
+    <ellipse cx="28" cy="108" rx="10" ry="12" fill="#228b22" opacity="0.9"/>
+    <circle cx="26" cy="104" r="3" fill="#cc8800"/>
+    <circle cx="30" cy="103" r="3" fill="#cc4422"/>
+    <circle cx="24" cy="107" r="3" fill="#cc2244"/>
+  ` + close;
+
+  if (card.name === "Wheel of Fortune") return open() + `
+    <rect x="8" y="24" width="124" height="168" fill="#1a1a3e"/>
+    <!-- corner symbols -->
+    <circle cx="22" cy="40" r="10" fill="#225588"/>
+    <text x="22" y="44" font-size="9" text-anchor="middle" fill="#ffd700" font-family="serif">♒</text>
+    <circle cx="118" cy="40" r="10" fill="#225588"/>
+    <text x="118" y="44" font-size="9" text-anchor="middle" fill="#ffd700" font-family="serif">♏</text>
+    <circle cx="22" cy="175" r="10" fill="#225588"/>
+    <text x="22" y="179" font-size="9" text-anchor="middle" fill="#ffd700" font-family="serif">♌</text>
+    <circle cx="118" cy="175" r="10" fill="#225588"/>
+    <text x="118" y="179" font-size="9" text-anchor="middle" fill="#ffd700" font-family="serif">♉</text>
+    <!-- wheel -->
+    <circle cx="70" cy="108" r="48" fill="none" stroke="#c9a961" stroke-width="3"/>
+    <circle cx="70" cy="108" r="36" fill="none" stroke="#c9a961" stroke-width="2"/>
+    <circle cx="70" cy="108" r="16" fill="#c9a961" opacity="0.3"/>
+    <!-- spokes -->
+    ${[...Array(8)].map((_,i)=>{const a=i*45*Math.PI/180; return `<line x1="${70+16*Math.cos(a)}" y1="${108+16*Math.sin(a)}" x2="${70+36*Math.cos(a)}" y2="${108+36*Math.sin(a)}" stroke="#c9a961" stroke-width="1.5"/>`;}).join('')}
+    <!-- T-A-R-O letters on wheel -->
+    <text x="70" y="76" font-size="9" text-anchor="middle" fill="#ffd700" font-family="serif">T</text>
+    <text x="98" y="112" font-size="9" text-anchor="middle" fill="#ffd700" font-family="serif">A</text>
+    <text x="70" y="145" font-size="9" text-anchor="middle" fill="#ffd700" font-family="serif">R</text>
+    <text x="42" y="112" font-size="9" text-anchor="middle" fill="#ffd700" font-family="serif">O</text>
+    <!-- sphinx on top -->
+    <rect x="56" y="62" width="28" height="12" rx="3" fill="#c9a961"/>
+    <circle cx="70" cy="58" r="6" fill="#f5deb3"/>
+    <!-- snake -->
+    <path d="M28 90 Q35 100 28 110 Q22 118 28 125" stroke="#cc4422" stroke-width="3" fill="none"/>
+    <!-- Anubis rising -->
+    <path d="M105 108 Q112 95 108 85 Q118 90 112 105Z" fill="#cc8800"/>
+  ` + close;
+
+  if (card.name === "The Chariot") return open() + `
+    <rect x="8" y="24" width="124" height="168" fill="#88aacc"/>
+    <!-- sky with stars -->
+    <rect x="8" y="24" width="124" height="70" fill="#334466"/>
+    ${[...Array(10)].map((_,i)=>`<circle cx="${20+i*11}" cy="${35+Math.sin(i)*10}" r="1.5" fill="#ffd700"/>`).join('')}
+    <!-- city in background -->
+    <rect x="12" y="85" width="18" height="25" fill="#aabb99"/>
+    <rect x="35" y="78" width="22" height="32" fill="#99aa88"/>
+    <rect x="95" y="82" width="20" height="28" fill="#aabb99"/>
+    <rect x="110" y="75" width="15" height="35" fill="#99aa88"/>
+    <!-- river -->
+    <path d="M8 130 Q35 122 70 128 Q100 133 132 122 L132 192 L8 192Z" fill="#4488aa" opacity="0.7"/>
+    <!-- chariot car -->
+    <rect x="30" y="110" width="80" height="45" rx="4" fill="#cc8800"/>
+    <rect x="35" y="115" width="70" height="35" rx="2" fill="#aa6600"/>
+    <!-- winged sun disc on front -->
+    <circle cx="70" cy="125" r="8" fill="#ffd700"/>
+    <path d="M55 125 Q62 118 70 125 Q78 118 85 125" fill="#cc8800" opacity="0.8"/>
+    <!-- wheels -->
+    <circle cx="45" cy="155" r="14" fill="none" stroke="#663300" stroke-width="3"/>
+    <circle cx="95" cy="155" r="14" fill="none" stroke="#663300" stroke-width="3"/>
+    <line x1="45" y1="141" x2="45" y2="169" stroke="#663300" stroke-width="2"/>
+    <line x1="31" y1="155" x2="59" y2="155" stroke="#663300" stroke-width="2"/>
+    <line x1="95" y1="141" x2="95" y2="169" stroke="#663300" stroke-width="2"/>
+    <line x1="81" y1="155" x2="109" y2="155" stroke="#663300" stroke-width="2"/>
+    <!-- figure in chariot -->
+    <rect x="54" y="95" width="22" height="20" rx="2" fill="#446699"/><!-- armor -->
+    <circle cx="65" cy="90" r="8" fill="#f5deb3"/>
+    <!-- crown with star -->
+    <rect x="58" y="80" width="16" height="8" fill="#ffd700"/>
+    <polygon points="65,75 68,80 62,80" fill="#ffd700"/>
+    <!-- two sphinxes -->
+    <ellipse cx="42" cy="148" rx="12" ry="7" fill="#eee"/>
+    <circle cx="32" cy="143" r="6" fill="#eee"/>
+    <ellipse cx="98" cy="148" rx="12" ry="7" fill="#333"/>
+    <circle cx="108" cy="143" r="6" fill="#333"/>
+  ` + close;
+
+  // ── MINOR ARCANA – WANDS ──
+  if (card.suit === "wands") return open() + `
+    <rect x="8" y="24" width="124" height="168" fill="#e8d8a0"/>
+    <!-- earthy landscape -->
+    <rect x="8" y="140" width="124" height="52" fill="#8b6914" opacity="0.5"/>
+    <path d="M8 140 Q35 132 70 138 Q100 143 132 132 L132 140 L8 140Z" fill="#7a5c10" opacity="0.7"/>
+    <!-- wands / rods motif: draw N wands -->
+    ${(() => {
+      const n = ["A","II","III","IV","V","VI","VII","VIII","IX","X"].indexOf(card.numeral)+1 || 1;
+      const positions = [
+        [[70,80]],
+        [[52,80],[88,80]],
+        [[38,80],[70,70],[102,80]],
+        [[35,80],[55,75],[85,75],[105,80]],
+        [[30,80],[48,68],[70,80],[92,68],[110,80]],
+        [[25,80],[43,70],[61,80],[79,70],[97,80],[115,80]],
+        [[22,78],[38,68],[54,78],[70,68],[86,78],[102,68],[118,78]],
+        [[20,82],[34,70],[48,82],[62,70],[76,82],[90,70],[104,82],[118,70]],
+        [[18,82],[30,70],[42,82],[54,70],[66,82],[78,70],[90,82],[102,70],[114,82]],
+        [[16,85],[26,72],[36,85],[46,72],[56,85],[66,72],[76,85],[86,72],[96,85],[106,72]],
+      ];
+      const pts = positions[Math.min(n,10)-1] || positions[0];
+      return pts.map(([x,y])=>`
+        <line x1="${x}" y1="${y+30}" x2="${x}" y2="${y-30}" stroke="#8b4513" stroke-width="3"/>
+        <circle cx="${x}" cy="${y-32}" r="4" fill="#228b22"/>
+        <circle cx="${x}" cy="${y+32}" r="3" fill="#228b22"/>
+        <line x1="${x-6}" y1="${y-20}" x2="${x-14}" y2="${y-26}" stroke="#228b22" stroke-width="1.5"/>
+        <line x1="${x+6}" y1="${y-20}" x2="${x+14}" y2="${y-26}" stroke="#228b22" stroke-width="1.5"/>
+      `).join('');
+    })()}
+    <!-- suit symbol bottom -->
+    <text x="70" y="178" font-size="10" text-anchor="middle" fill="#8b4513" font-family="serif">🔥</text>
+  ` + close;
+
+  // ── MINOR ARCANA – CUPS ──
+  if (card.suit === "cups") return open() + `
+    <rect x="8" y="24" width="124" height="168" fill="#c8d8f0"/>
+    <!-- water background -->
+    <rect x="8" y="145" width="124" height="47" fill="#4488aa" opacity="0.4"/>
+    <path d="M8 145 Q35 138 70 144 Q100 149 132 138 L132 145 L8 145Z" fill="#3399aa" opacity="0.5"/>
+    <!-- cups / chalices -->
+    ${(() => {
+      const n = ["A","II","III","IV","V","VI","VII","VIII","IX","X"].indexOf(card.numeral)+1 || 1;
+      const positions = [
+        [[70,90]],
+        [[48,90],[92,90]],
+        [[34,90],[70,82],[106,90]],
+        [[30,90],[52,84],[88,84],[110,90]],
+        [[22,90],[42,78],[70,90],[98,78],[118,90]],
+        [[20,90],[40,80],[60,90],[80,80],[100,90],[120,90]],
+        [[18,86],[34,76],[52,86],[70,76],[88,86],[104,76],[122,86]],
+        [[16,88],[30,76],[44,88],[58,76],[72,88],[86,76],[100,88],[114,76]],
+        [[14,88],[26,76],[38,88],[50,76],[62,88],[74,76],[86,88],[98,76],[110,88]],
+        [[12,90],[24,78],[36,90],[48,78],[60,90],[72,78],[84,90],[96,78],[108,90],[120,78]],
+      ];
+      const pts = positions[Math.min(n,10)-1] || positions[0];
+      return pts.map(([x,y])=>`
+        <path d="M${x-7} ${y-8} Q${x-8} ${y+8} ${x-4} ${y+12} L${x+4} ${y+12} Q${x+8} ${y+8} ${x+7} ${y-8}Z" fill="#2255a4" opacity="0.85"/>
+        <ellipse cx="${x}" cy="${y-8}" rx="7" ry="3" fill="#3366cc"/>
+        <line x1="${x-4}" y1="${y+12}" x2="${x+4}" y2="${y+12}" stroke="#1a3a80" stroke-width="1.5"/>
+        <line x1="${x}" y1="${y+12}" x2="${x}" y2="${y+18}" stroke="#1a3a80" stroke-width="1.5"/>
+        <ellipse cx="${x}" cy="${y+18}" rx="5" ry="2" fill="#1a3a80"/>
+        <!-- water overflow -->
+        <path d="M${x-7} ${y-8} Q${x} ${y-18} ${x+7} ${y-8}" fill="#88bbdd" opacity="0.5"/>
+      `).join('');
+    })()}
+  ` + close;
+
+  // ── MINOR ARCANA – SWORDS ──
+  if (card.suit === "swords") return open() + `
+    <rect x="8" y="24" width="124" height="168" fill="#c0c8d8"/>
+    <!-- cloudy sky -->
+    <ellipse cx="35" cy="50" rx="22" ry="12" fill="#e0e8f0" opacity="0.8"/>
+    <ellipse cx="70" cy="44" rx="28" ry="14" fill="#e8f0f8" opacity="0.8"/>
+    <ellipse cx="105" cy="52" rx="20" ry="11" fill="#e0e8f0" opacity="0.8"/>
+    <!-- ground -->
+    <rect x="8" y="158" width="124" height="34" fill="#a0a878" opacity="0.7"/>
+    <!-- swords -->
+    ${(() => {
+      const n = ["A","II","III","IV","V","VI","VII","VIII","IX","X"].indexOf(card.numeral)+1 || 1;
+      const positions = [
+        [[70,100]],
+        [[52,100],[88,100]],
+        [[38,100],[70,92],[102,100]],
+        [[30,100],[54,92],[86,92],[110,100]],
+        [[24,100],[44,88],[70,100],[96,88],[116,100]],
+        [[20,100],[38,88],[58,100],[82,88],[102,100],[120,100]],
+        [[16,98],[32,86],[50,98],[68,86],[86,98],[104,86],[122,98]],
+        [[14,98],[28,86],[42,98],[56,86],[70,98],[84,86],[98,98],[112,86]],
+        [[12,98],[24,86],[36,98],[48,86],[60,98],[72,86],[84,98],[96,86],[108,98]],
+        [[10,98],[22,86],[34,98],[46,86],[58,98],[70,86],[82,98],[94,86],[106,98],[118,86]],
+      ];
+      const pts = positions[Math.min(n,10)-1] || positions[0];
+      return pts.map(([x,y])=>`
+        <polygon points="${x},${y-38} ${x-2},${y+30} ${x+2},${y+30}" fill="#aabbcc"/>
+        <polygon points="${x},${y-38} ${x-2},${y-32} ${x+2},${y-32}" fill="#e0e8f0"/>
+        <line x1="${x-10}" y1="${y+28}" x2="${x+10}" y2="${y+28}" stroke="#8899aa" stroke-width="2"/>
+        <rect x="${x-2}" y="${y+28}" width="4" height="6" fill="#aa8833"/>
+      `).join('');
+    })()}
+  ` + close;
+
+  // ── MINOR ARCANA – PENTACLES ──
+  if (card.suit === "pentacles") return open() + `
+    <rect x="8" y="24" width="124" height="168" fill="#d0e8c0"/>
+    <!-- landscape -->
+    <rect x="8" y="148" width="124" height="44" fill="#5c8a3c" opacity="0.8"/>
+    <path d="M8 148 Q40 140 70 148 Q100 155 132 142 L132 148 L8 148Z" fill="#4a7230" opacity="0.7"/>
+    <!-- pentacles (5-pointed stars in circles) -->
+    ${(() => {
+      const n = ["A","II","III","IV","V","VI","VII","VIII","IX","X"].indexOf(card.numeral)+1 || 1;
+      const positions = [
+        [[70,100]],
+        [[48,100],[92,100]],
+        [[34,100],[70,88],[106,100]],
+        [[30,100],[54,90],[86,90],[110,100]],
+        [[22,100],[44,86],[70,100],[96,86],[118,100]],
+        [[18,100],[40,88],[62,100],[78,88],[100,100],[122,100]],
+        [[16,96],[34,84],[52,96],[70,84],[88,96],[106,84],[124,96]],
+        [[14,96],[28,84],[42,96],[56,84],[70,96],[84,84],[98,96],[112,84]],
+        [[12,96],[24,84],[36,96],[48,84],[60,96],[72,84],[84,96],[96,84],[108,96]],
+        [[10,96],[22,84],[34,96],[46,84],[58,96],[70,84],[82,96],[94,84],[106,96],[118,84]],
+      ];
+      const pts = positions[Math.min(n,10)-1] || positions[0];
+      const r = n > 6 ? 10 : 13;
+      return pts.map(([x,y])=>`
+        <circle cx="${x}" cy="${y}" r="${r}" fill="none" stroke="#557722" stroke-width="1.5"/>
+        <polygon points="${x},${y-r+3} ${x+2.4},${y-0.8} ${x+r*0.85-1},${y-r*0.31+1} ${x+1.5},${y+r*0.5-1} ${x+r*0.53},${y+r*0.81-1} ${x-r*0.53},${y+r*0.81-1} ${x-1.5},${y+r*0.5-1} ${x-r*0.85+1},${y-r*0.31+1} ${x-2.4},${y-0.8}" fill="#daa520" stroke="#557722" stroke-width="1"/>
+      `).join('');
+    })()}
+  ` + close;
+
+  // Fallback for any other major arcana not individually drawn
+  return open() + `
+    <rect x="8" y="24" width="124" height="168" fill="${p.sky}"/>
+    <circle cx="70" cy="95" r="35" fill="none" stroke="${p.border}" stroke-width="2" opacity="0.5"/>
+    <circle cx="70" cy="95" r="20" fill="${p.border}" opacity="0.15"/>
+    <polygon points="70,65 75,85 95,85 80,97 86,117 70,105 54,117 60,97 45,85 65,85" fill="${p.border}" opacity="0.6"/>
+    <text x="70" y="158" font-size="11" text-anchor="middle" fill="${p.border}" font-family="serif">${card.numeral}</text>
+  ` + close;
+}
+
+// ─── STATE ──────────────────────────────────────────────────────────────────────
+let currentSpread = 1;
+let drawnCards = [];
+
+function setSpread(n) {
+  currentSpread = n;
+  document.querySelectorAll('.spread-btn').forEach(btn => {
+    btn.style.border = '1px solid rgba(201,169,97,0.4)';
+    btn.style.color  = 'rgba(201,169,97,0.6)';
+  });
+  const active = document.getElementById('btn-' + n);
+  if (active) {
+    active.style.border = '1px solid #c9a961';
+    active.style.color  = '#c9a961';
+  }
+}
+
+// ─── DRAW CARDS ─────────────────────────────────────────────────────────────────
+function drawCards() {
+  const area    = document.getElementById('cards-area');
+  const reading = document.getElementById('reading-area');
+  area.innerHTML    = '';
+  reading.innerHTML = '';
+
+  const shuffled = [...tarotDeck].sort(() => Math.random() - 0.5);
+  drawnCards = shuffled.slice(0, currentSpread);
+  const labels = currentSpread === 3 ? ['Past', 'Present', 'Future'] : ['Your Card'];
+
+  drawnCards.forEach((card, i) => {
+    const container = document.createElement('div');
+    container.className = 'card-container cursor-pointer fade-up';
+    container.style.animationDelay = (i * 0.2) + 's';
+    container.style.width  = '160px';
+    container.style.height = '260px';
+
+    container.innerHTML = `
+      <div class="card-inner w-full h-full relative" id="card-${i}">
+        <!-- BACK FACE -->
+        <div class="card-face card-face-back card-back flex flex-col items-center justify-center p-4">
+          <svg width="60" height="60" viewBox="0 0 60 60" style="color:#c9a961;" class="mx-auto mb-3">
+            <polygon points="30,5 35,20 50,20 38,30 42,45 30,36 18,45 22,30 10,20 25,20" fill="none" stroke="currentColor" stroke-width="1.5"/>
+            <circle cx="30" cy="30" r="25" fill="none" stroke="currentColor" stroke-width="0.8" stroke-dasharray="3,3"/>
+          </svg>
+          <p class="text-xs" style="color:#c9a961; font-family:'Cinzel Decorative',serif;">${labels[i]}</p>
+        </div>
+        <!-- FRONT FACE -->
+        <div class="card-face card-face-front card-front flex flex-col items-center p-2 overflow-hidden">
+          <div style="flex:1; display:flex; align-items:center; justify-content:center;">
+            ${getCardSVG(card)}
+          </div>
+        </div>
+      </div>`;
+
+    container.addEventListener('click', () => flipCard(i));
+    area.appendChild(container);
+  });
+
+  // Auto-reveal reading after cards have animated in
+  setTimeout(() => showReading(), currentSpread * 200 + 1200);
+}
+
+function flipCard(index) {
+  const card = document.getElementById('card-' + index);
+  if (card) card.classList.toggle('flipped');
+}
+
+// ─── READING TEXT ────────────────────────────────────────────────────────────────
+function showReading() {
+  const reading = document.getElementById('reading-area');
+  const labels  = currentSpread === 3 ? ['Past', 'Present', 'Future'] : ['Guidance'];
+
+  let html = '<div class="fade-up" style="animation-delay:0.2s;">';
+  html += '<h2 class="text-2xl font-bold mb-6" style="font-family:\'Cinzel Decorative\',serif; color:#c9a961;">Your Reading</h2>';
+
+  drawnCards.forEach((card, i) => {
+    html += `
+      <div class="mb-6 p-5 rounded-xl fade-up" style="animation-delay:${0.3 + i * 0.2}s; background:rgba(201,169,97,0.08); border:1px solid rgba(201,169,97,0.2);">
+        <p class="text-xs uppercase tracking-widest mb-1" style="color:#a07c3a;">${labels[i]}</p>
+        <h3 class="text-xl font-bold mb-2" style="color:#c9a961; font-family:'Cinzel Decorative',serif;">${card.name}</h3>
+        <p class="text-base italic leading-relaxed" style="color:#cbd5e0;">${card.meaning}</p>
+      </div>`;
+  });
+
+  html += '<p class="text-sm mt-6 mb-8" style="color:rgba(160,174,192,0.6);">Tap any card to flip it</p>';
+  html += '</div>';
+  reading.innerHTML = html;
+
+  // Flip cards sequentially
+  drawnCards.forEach((_, i) => setTimeout(() => flipCard(i), i * 350));
+}
+
+// ─── STARS ───────────────────────────────────────────────────────────────────────
+(function generateStars() {
+  const container = document.getElementById('stars-bg');
+  for (let i = 0; i < 60; i++) {
+    const star = document.createElement('div');
+    star.className = 'star absolute rounded-full';
+    const sz = Math.random() * 2 + 1;
+    star.style.cssText = `width:${sz}px;height:${sz}px;background:#c9a961;left:${Math.random()*100}%;top:${Math.random()*100}%;animation-delay:${Math.random()*3}s;`;
+    container.appendChild(star);
+  }
+})();
+
+// Init spread buttons
+setSpread(1);
+  </script>
+</body>
+</html>
