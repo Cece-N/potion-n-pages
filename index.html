@@ -102,6 +102,11 @@
 
       <!-- Reading area -->
       <div id="reading-area" class="max-w-2xl w-full text-center px-4"></div>
+      <div id="again-btn-area" class="mt-6 mb-12" style="display:none;">
+        <button onclick="resetReading()" class="px-8 py-3 rounded-full text-lg font-semibold transition-all hover:scale-105 active:scale-95" style="background: linear-gradient(135deg, #c9a961, #a07c3a); color: #0a0a1a; font-family: 'Cinzel Decorative', serif; box-shadow: 0 4px 20px rgba(201,169,97,0.4);">
+          Do Another Reading
+        </button>
+      </div>
     </div>
   </div>
 
@@ -813,6 +818,7 @@ function drawCards() {
   const reading = document.getElementById('reading-area');
   area.innerHTML    = '';
   reading.innerHTML = '';
+  showAgainBtn(false);
 
   const shuffled = [...tarotDeck].sort(() => Math.random() - 0.5);
   drawnCards = shuffled.slice(0, currentSpread);
@@ -849,6 +855,9 @@ function drawCards() {
 
   // Auto-reveal reading after cards have animated in
   setTimeout(() => showReading(), currentSpread * 200 + 1200);
+
+  // Show the button immediately so it's always accessible
+  showAgainBtn(true);
 }
 
 function flipCard(index) {
@@ -878,6 +887,10 @@ function showReading() {
   reading.innerHTML = html;
 
   // Flip cards sequentially
+
+  showAgainBtn(true);
+
+  // Flip cards sequentially
   drawnCards.forEach((_, i) => setTimeout(() => flipCard(i), i * 350));
 }
 
@@ -892,6 +905,20 @@ function showReading() {
     container.appendChild(star);
   }
 })();
+
+function showAgainBtn(visible) {
+  const btn = document.getElementById('again-btn-area');
+  if (!btn) return;
+  btn.style.display = visible ? 'flex' : 'none';
+  if (visible) btn.style.justifyContent = 'center';
+}
+
+function resetReading() {
+  document.getElementById('cards-area').innerHTML = '';
+  document.getElementById('reading-area').innerHTML = '';
+  showAgainBtn(false);
+  window.scrollTo({ top: 0, behavior: 'smooth' });
+}
 
 // Init spread buttons
 setSpread(1);
