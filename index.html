@@ -215,11 +215,11 @@ const tarotDeck = [
 // Each card gets a miniature hand-drawn-style illustration inspired by the Smith-Waite deck.
 function getCardSVG(card) {
   const suitPalette = {
-    major:     { bg: "#f5edd8", border: "#6b4f1a", ink: "#6b4f1a" },
-    wands:     { bg: "#f5edd8", border: "#7a3a10", ink: "#7a3a10" },
-    cups:      { bg: "#f5edd8", border: "#1e3f7a", ink: "#1e3f7a" },
-    swords:    { bg: "#f5edd8", border: "#2e4a5a", ink: "#2e4a5a" },
-    pentacles: { bg: "#f5edd8", border: "#2d5016", ink: "#2d5016" },
+    major:     { bg: "#f5edd8", border: "#6b4f1a", ink: "#6b4f1a", sky: "#dce8f5" },
+    wands:     { bg: "#f5edd8", border: "#7a3a10", ink: "#7a3a10", sky: "#e8d8a0" },
+    cups:      { bg: "#f5edd8", border: "#1e3f7a", ink: "#1e3f7a", sky: "#c8d8f0" },
+    swords:    { bg: "#f5edd8", border: "#2e4a5a", ink: "#2e4a5a", sky: "#c0c8d8" },
+    pentacles: { bg: "#f5edd8", border: "#2d5016", ink: "#2d5016", sky: "#d0e8c0" },
   };
   const p = suitPalette[card.suit] || suitPalette.major;
 
@@ -811,6 +811,8 @@ function getCardSVG(card) {
 // ─── STATE ──────────────────────────────────────────────────────────────────────
 let currentSpread = 1;
 let drawnCards = [];
+// ===== Clarifier storage =====
+let clarifiers = {};
 
 function setSpread(n) {
   currentSpread = n;
@@ -832,6 +834,7 @@ function drawCards() {
   area.innerHTML    = '';
   reading.innerHTML = '';
   showAgainBtn(false);
+  clarifiers = {};
 
   const shuffled = [...tarotDeck].sort(() => Math.random() - 0.5);
   drawnCards = shuffled.slice(0, currentSpread);
@@ -873,38 +876,161 @@ function drawCards() {
   showAgainBtn(true);
 }
 
+// ─── DRAW CLARIFIER ────────────────────────────────────────────────────────────
+function drawClarifier(i) {
+  if (!clarifiers[i]) clarifiers[i] = [];
+
+  // Tránh rút trùng với các lá chính và các clarifier đã có
+  const usedNames = new Set([
+    ...drawnCards.map(c => c.name),
+    ...Object.values(clarifiers).flat().map(c => c.name)
+  ]);
+  let pool = tarotDeck.filter(c => !usedNames.has(c.name));
+  if (pool.length === 0) pool = tarotDeck;
+
+  const card = pool[Math.floor(Math.random() * pool.length)];
+  clarifiers[i].push(card);
+
+  // Vẽ lại phần đọc bài nhưng không lật lại các lá chính
+  showReading(true);
+}
+
 function flipCard(index) {
   const card = document.getElementById('card-' + index);
   if (card) card.classList.toggle('flipped');
 }
 
 // ─── READING TEXT ────────────────────────────────────────────────────────────────
-function showReading() {
-  const reading = document.getElementById('reading-area');
-  const labels  = currentSpread === 3 ? ['Past', 'Present', 'Future'] : ['Guidance'];
+function showReading(skipFlip = false) {
 
-  let html = '<div class="fade-up" style="animation-delay:0.2s;">';
-  html += '<h2 class="text-2xl font-bold mb-6" style="font-family:\'Marck Script\',serif; color:#c9a961;">Your Reading</h2>';
+  const reading = document.getElementById('reading-area');
+  const labels =
+    currentSpread === 3
+      ? ['Past', 'Present', 'Future']
+      : ['Guidance'];
+
+  let html = `
+    <div class="fade-up" style="animation-delay:0.2s;">
+      <h2 class="text-2xl font-bold mb-6"
+          style="font-family:'Marck Script',serif; color:#c9a961;">
+        Your Reading
+      </h2>
+  `;
 
   drawnCards.forEach((card, i) => {
+
+    // ===== Render Clarifiers =====
+    let clarifierHTML = "";
+
+    if (clarifiers[i] && clarifiers[i].length > 0) {
+
+      clarifiers[i].forEach((clarifier, index) => {
+
+        // Ảnh minh họa lá clarifier, thu nhỏ còn 2/3 kích thước lá bài chính (140x220 -> ~93x147)
+        const clarifierSVG = getCardSVG(clarifier).replace(
+          '<svg width="140" height="220"',
+          '<svg width="93" height="147"'
+        );
+
+        clarifierHTML += `
+          <div class="mt-5 p-4 rounded-lg flex flex-wrap sm:flex-nowrap items-start gap-4 text-left"
+               style="
+                 border-left:3px solid #c9a961;
+                 background:rgba(201,169,97,0.05);">
+
+            <div class="flex-shrink-0 mx-auto sm:mx-0" style="border-radius:8px; overflow:hidden; box-shadow:0 4px 12px rgba(0,0,0,0.4);">
+              ${clarifierSVG}
+            </div>
+
+            <div class="min-w-0">
+              <p class="text-xs uppercase tracking-widest mb-1"
+                 style="color:#a07c3a;">
+                Clarifier ${index + 1}
+              </p>
+
+              <h4 class="text-lg font-bold mb-2"
+                  style="
+                    color:#c9a961;
+                    font-family:'Marck Script',serif;">
+                ${clarifier.name}
+              </h4>
+
+              <p class="text-base italic leading-relaxed"
+                 style="color:#cbd5e0;">
+                ${clarifier.meaning}
+              </p>
+            </div>
+
+          </div>
+        `;
+
+      });
+
+    }
+
     html += `
-      <div class="mb-6 p-5 rounded-xl fade-up" style="animation-delay:${0.3 + i * 0.2}s; background:rgba(201,169,97,0.08); border:1px solid rgba(201,169,97,0.2);">
-        <p class="text-xs uppercase tracking-widest mb-1" style="color:#a07c3a;">${labels[i]}</p>
-        <h3 class="text-xl font-bold mb-2" style="color:#c9a961; font-family:'Marck Script',serif;">${card.name}</h3>
-        <p class="text-base italic leading-relaxed" style="color:#cbd5e0;">${card.meaning}</p>
-      </div>`;
+      <div class="mb-6 p-5 rounded-xl fade-up"
+           style="
+             animation-delay:${0.3 + i * 0.2}s;
+             background:rgba(201,169,97,0.08);
+             border:1px solid rgba(201,169,97,0.2);">
+
+        <p class="text-xs uppercase tracking-widest mb-1"
+           style="color:#a07c3a;">
+          ${labels[i]}
+        </p>
+
+        <h3 class="text-xl font-bold mb-2"
+            style="
+              color:#c9a961;
+              font-family:'Marck Script',serif;">
+          ${card.name}
+        </h3>
+
+        <p class="text-base italic leading-relaxed mb-4"
+           style="color:#cbd5e0;">
+          ${card.meaning}
+        </p>
+
+        <button
+          onclick="drawClarifier(${i})"
+          class="clarifier-btn px-4 py-2 rounded-full text-sm transition-all"
+          style="
+            border:1px solid rgba(201,169,97,0.35);
+            color:#c9a961;
+            background:transparent;
+            font-family:'Cinzel',serif;">
+
+          ✦ Seek Further Guidance
+
+        </button>
+
+        ${clarifierHTML}
+
+      </div>
+    `;
+
   });
 
-  html += '<p class="text-sm mt-6 mb-8" style="color:rgba(160,174,192,0.6);">Tap any card to flip it</p>';
-  html += '</div>';
-  reading.innerHTML = html;
+  html += `
+      <p class="text-sm mt-6 mb-8"
+         style="color:rgba(160,174,192,0.6);">
+        Tap any card to flip it
+      </p>
+    </div>
+  `;
 
-  // Flip cards sequentially
+  reading.innerHTML = html;
 
   showAgainBtn(true);
 
-  // Flip cards sequentially
-  drawnCards.forEach((_, i) => setTimeout(() => flipCard(i), i * 350));
+  // Chỉ flip khi vừa rút bài chính
+  if (!skipFlip) {
+    drawnCards.forEach((_, i) => {
+      setTimeout(() => flipCard(i), i * 350);
+    });
+  }
+
 }
 
 // ─── STARS ───────────────────────────────────────────────────────────────────────
@@ -932,8 +1058,6 @@ function resetReading() {
   showAgainBtn(false);
   window.scrollTo({ top: 0, behavior: 'smooth' });
 }
-
-// Init spread buttons
 setSpread(1);
   </script>
 </body>
