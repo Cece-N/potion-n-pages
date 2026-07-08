@@ -127,90 +127,561 @@
 // ─── TAROT DECK ────────────────────────────────────────────────────────────────
 const tarotDeck = [
   // Major Arcana
-  { name: "The Fool",         numeral: "0",    suit: "major",     meaning: "New beginnings, spontaneity, innocence. A leap of faith into the unknown awaits you." },
-  { name: "The Magician",     numeral: "I",    suit: "major",     meaning: "Manifestation, resourcefulness, power. You have all the tools you need to succeed." },
-  { name: "The High Priestess",numeral:"II",   suit: "major",     meaning: "Intuition, mystery, inner knowledge. Trust your instincts and look beyond the surface." },
-  { name: "The Empress",      numeral: "III",  suit: "major",     meaning: "Abundance, nurturing, fertility. Creative energy flows through you freely." },
-  { name: "The Emperor",      numeral: "IV",   suit: "major",     meaning: "Authority, structure, stability. Take command of your situation with confidence." },
-  { name: "The Hierophant",   numeral: "V",    suit: "major",     meaning: "Tradition, wisdom, spiritual guidance. Seek counsel from those who have walked before." },
-  { name: "The Lovers",       numeral: "VI",   suit: "major",     meaning: "Love, harmony, choices. A meaningful connection or decision shapes your path." },
-  { name: "The Chariot",      numeral: "VII",  suit: "major",     meaning: "Determination, willpower, triumph. Harness opposing forces to move forward." },
-  { name: "Strength",         numeral: "VIII", suit: "major",     meaning: "Courage, patience, inner power. Gentle persistence overcomes all obstacles." },
-  { name: "The Hermit",       numeral: "IX",   suit: "major",     meaning: "Introspection, solitude, wisdom. Withdraw to find the light within yourself." },
-  { name: "Wheel of Fortune", numeral: "X",    suit: "major",     meaning: "Cycles, fate, turning points. The wheel spins — embrace the change ahead." },
-  { name: "Justice",          numeral: "XI",   suit: "major",     meaning: "Fairness, truth, accountability. What is sown shall be reaped in equal measure." },
-  { name: "The Hanged Man",   numeral: "XII",  suit: "major",     meaning: "Surrender, new perspective, letting go. Release control to gain understanding." },
-  { name: "Death",            numeral: "XIII", suit: "major",     meaning: "Transformation, endings, renewal. Something must end for the new to begin." },
-  { name: "Temperance",       numeral: "XIV",  suit: "major",     meaning: "Balance, moderation, patience. Blend opposing elements into harmony." },
-  { name: "The Devil",        numeral: "XV",   suit: "major",     meaning: "Bondage, materialism, shadow self. Recognize the chains you have placed upon yourself." },
-  { name: "The Tower",        numeral: "XVI",  suit: "major",     meaning: "Upheaval, revelation, sudden change. What crumbles was built on false foundations." },
-  { name: "The Star",         numeral: "XVII", suit: "major",     meaning: "Hope, inspiration, serenity. After darkness, the stars guide you home." },
-  { name: "The Moon",         numeral: "XVIII",suit: "major",     meaning: "Illusion, fear, the subconscious. Not all is as it seems — trust your deeper knowing." },
-  { name: "The Sun",          numeral: "XIX",  suit: "major",     meaning: "Joy, success, vitality. Bask in the warmth of clarity and celebration." },
-  { name: "Judgement",        numeral: "XX",   suit: "major",     meaning: "Rebirth, calling, absolution. Rise to your higher purpose without hesitation." },
-  { name: "The World",        numeral: "XXI",  suit: "major",     meaning: "Completion, integration, accomplishment. A cycle reaches its fulfillment." },
-  // Wands
-  { name: "Ace of Wands",     numeral: "A",    suit: "wands",     meaning: "Inspiration, new opportunities, growth. Creative fire ignites within you." },
-  { name: "Two of Wands",     numeral: "II",   suit: "wands",     meaning: "Planning, making decisions, leaving home. Hold your vision with confidence." },
-  { name: "Three of Wands",   numeral: "III",  suit: "wands",     meaning: "Foresight, exploration, progress. Your ventures expand beyond horizons." },
-  { name: "Four of Wands",    numeral: "IV",   suit: "wands",     meaning: "Celebration, harmony, home. Joy and stability anchor your foundation." },
-  { name: "Five of Wands",    numeral: "V",    suit: "wands",     meaning: "Conflict, competition, tension. Navigate differences with grace and wisdom." },
-  { name: "Six of Wands",     numeral: "VI",   suit: "wands",     meaning: "Victory, recognition, success. Your efforts earn well-deserved acclaim." },
-  { name: "Seven of Wands",   numeral: "VII",  suit: "wands",     meaning: "Perseverance, determination, challenge. Stand firm in your convictions." },
-  { name: "Eight of Wands",   numeral: "VIII", suit: "wands",     meaning: "Speed, movement, news. Swift progress carries you forward with momentum." },
-  { name: "Nine of Wands",    numeral: "IX",   suit: "wands",     meaning: "Resilience, courage, testing. You near your goal — persevere a little longer." },
-  { name: "Ten of Wands",     numeral: "X",    suit: "wands",     meaning: "Burden, completion, hardship. Recognize when to release what no longer serves." },
-  { name: "Page of Wands",    numeral: "P",    suit: "wands",     meaning: "Enthusiasm, exploration, free spirit. Curiosity sparks adventure and discovery." },
-  { name: "Knight of Wands",  numeral: "Kn",   suit: "wands",     meaning: "Energy, passion, action. Embrace bold moves with fiery determination." },
-  { name: "Queen of Wands",   numeral: "Q",    suit: "wands",     meaning: "Courage, confidence, independence. Channel your magnetic creative power." },
-  { name: "King of Wands",    numeral: "K",    suit: "wands",     meaning: "Leadership, vision, drive. Command respect through passionate authenticity." },
-  // Cups
-  { name: "Ace of Cups",      numeral: "A",    suit: "cups",      meaning: "Love, new emotions, compassion. Your heart opens to pure possibility." },
-  { name: "Two of Cups",      numeral: "II",   suit: "cups",      meaning: "Partnership, unity, connection. Deep bonds form between kindred souls." },
-  { name: "Three of Cups",    numeral: "III",  suit: "cups",      meaning: "Celebration, friendship, community. Joy multiplies when shared with others." },
-  { name: "Four of Cups",     numeral: "IV",   suit: "cups",      meaning: "Apathy, contemplation, meditation. Pause to reassess what truly matters." },
-  { name: "Five of Cups",     numeral: "V",    suit: "cups",      meaning: "Loss, sorrow, disappointment. Grief passes — healing light emerges ahead." },
-  { name: "Six of Cups",      numeral: "VI",   suit: "cups",      meaning: "Innocence, nostalgia, memories. Return to the purity of childlike wonder." },
-  { name: "Seven of Cups",    numeral: "VII",  suit: "cups",      meaning: "Illusion, choices, wishful thinking. Discern truth from fantasy within." },
-  { name: "Eight of Cups",    numeral: "VIII", suit: "cups",      meaning: "Abandonment, escapism, seeking. Sometimes moving forward means leaving behind." },
-  { name: "Nine of Cups",     numeral: "IX",   suit: "cups",      meaning: "Satisfaction, fulfillment, abundance. Wishes manifest and dreams come true." },
-  { name: "Ten of Cups",      numeral: "X",    suit: "cups",      meaning: "Harmony, happiness, family. Complete emotional fulfillment surrounds you." },
-  { name: "Page of Cups",     numeral: "P",    suit: "cups",      meaning: "Creativity, sensitivity, openness. Messages of love and inspiration arrive." },
-  { name: "Knight of Cups",   numeral: "Kn",   suit: "cups",      meaning: "Romance, charm, idealism. Follow your heart with poetic devotion." },
-  { name: "Queen of Cups",    numeral: "Q",    suit: "cups",      meaning: "Compassion, intuition, nurturing. Emotional wisdom and empathy flow freely." },
-  { name: "King of Cups",     numeral: "K",    suit: "cups",      meaning: "Emotional balance, diplomacy, calm. Master your feelings with quiet strength." },
-  // Swords
-  { name: "Ace of Swords",    numeral: "A",    suit: "swords",    meaning: "Truth, clarity, breakthrough. Sharp insight cuts through confusion instantly." },
-  { name: "Two of Swords",    numeral: "II",   suit: "swords",    meaning: "Stalemate, difficult choices, tension. Pause before deciding — both paths matter." },
-  { name: "Three of Swords",  numeral: "III",  suit: "swords",    meaning: "Sorrow, heartbreak, difficult truths. Pain teaches us what we cherish most." },
-  { name: "Four of Swords",   numeral: "IV",   suit: "swords",    meaning: "Rest, respite, truce. Stillness restores your spirit and sharpens your mind." },
-  { name: "Five of Swords",   numeral: "V",    suit: "swords",    meaning: "Defeat, conflict, loss. Not every battle worth winning comes without cost." },
-  { name: "Six of Swords",    numeral: "VI",   suit: "swords",    meaning: "Travel, transition, moving on. Smooth passage carries you toward calmer waters." },
-  { name: "Seven of Swords",  numeral: "VII",  suit: "swords",    meaning: "Deception, betrayal, stealth. Question what is hidden and what remains unclear." },
-  { name: "Eight of Swords",  numeral: "VIII", suit: "swords",    meaning: "Restriction, confusion, powerlessness. Your bonds are looser than you believe." },
-  { name: "Nine of Swords",   numeral: "IX",   suit: "swords",    meaning: "Anxiety, nightmares, despair. Mental torment yields to dawn's gentle light." },
-  { name: "Ten of Swords",    numeral: "X",    suit: "swords",    meaning: "Ending, betrayal, rock bottom. What has fallen makes space for rebirth." },
-  { name: "Page of Swords",   numeral: "P",    suit: "swords",    meaning: "Curiosity, vigilance, new ideas. Truth-seeking brings important revelations." },
-  { name: "Knight of Swords", numeral: "Kn",   suit: "swords",    meaning: "Logic, action, impulsiveness. Charge forward with intellect as your weapon." },
-  { name: "Queen of Swords",  numeral: "Q",    suit: "swords",    meaning: "Clarity, communication, independence. Speak your truth with unflinching honesty." },
-  { name: "King of Swords",   numeral: "K",    suit: "swords",    meaning: "Authority, intellect, absolute truth. Command through clarity and reasoned wisdom." },
-  // Pentacles
-  { name: "Ace of Pentacles", numeral: "A",    suit: "pentacles", meaning: "Prosperity, opportunity, abundance. Material blessing and fortune arrive." },
-  { name: "Two of Pentacles", numeral: "II",   suit: "pentacles", meaning: "Balance, adaptability, juggling. Manage multiple responsibilities with grace." },
-  { name: "Three of Pentacles",numeral:"III",  suit: "pentacles", meaning: "Teamwork, collaboration, learning. Shared effort creates masterful results." },
-  { name: "Four of Pentacles",numeral: "IV",   suit: "pentacles", meaning: "Security, control, possessiveness. Hold your resources wisely, but not too tight." },
-  { name: "Five of Pentacles",numeral: "V",    suit: "pentacles", meaning: "Hardship, loss, struggle. Support exists — reach out even when isolated." },
-  { name: "Six of Pentacles", numeral: "VI",   suit: "pentacles", meaning: "Charity, generosity, fairness. Give freely and abundance returns tenfold." },
-  { name: "Seven of Pentacles",numeral:"VII",  suit: "pentacles", meaning: "Effort, patience, growth. Your investment begins to show its promise." },
-  { name: "Eight of Pentacles",numeral:"VIII", suit: "pentacles", meaning: "Skill, practice, mastery. Dedication to your craft refines your expertise." },
-  { name: "Nine of Pentacles",numeral: "IX",   suit: "pentacles", meaning: "Abundance, luxury, self-sufficiency. Your efforts bloom into well-earned reward." },
-  { name: "Ten of Pentacles", numeral: "X",    suit: "pentacles", meaning: "Wealth, inheritance, legacy. Generations of abundance secure your foundation." },
-  { name: "Page of Pentacles",numeral: "P",    suit: "pentacles", meaning: "Opportunity, study, new venture. Potential ripens — nurture it with dedication." },
-  { name: "Knight of Pentacles",numeral:"Kn",  suit: "pentacles", meaning: "Reliability, efficiency, hard work. Steady progress yields substantial gains." },
-  { name: "Queen of Pentacles",numeral:"Q",    suit: "pentacles", meaning: "Nurturing, practicality, abundance. Cultivate prosperity through caring action." },
-  { name: "King of Pentacles",numeral: "K",    suit: "pentacles", meaning: "Wealth, leadership, abundance. Command material success through expertise." }
-];
+  {
+    name: "The Fool", numeral: "0", suit: "major",
+    keywords: "Beginnings, Spontaneity, Faith",
+    life: "A fresh chapter opens up a world of pure potential and ultimate freedom.",
+    career: "Take a calculated leap into a completely new role or bold business venture.",
+    love: "Embrace exciting, spontaneous connections without carrying any heavy past baggage."
+  },
+  {
+    name: "The Magician", numeral: "I", suit: "major",
+    keywords: "Manifestation, Power, Resourcefulness",
+    life: "You possess every necessary tool to create your desired reality right now.",
+    career: "Execute your brilliant ideas with absolute confidence and focused professional willpower.",
+    love: "Use your personal charm and clear communication to build strong relationship foundations."
+  },
+  {
+    name: "The High Priestess", numeral: "II", suit: "major",
+    keywords: "Intuition, Mystery, Subconscious",
+    life: "Look beyond the surface and trust your gut feelings above all logic.",
+    career: "Step back quietly and wait for hidden information to reveal itself entirely.",
+    love: "Honor the quiet mysteries of your heart rather than forcing immediate answers."
+  },
+  {
+    name: "The Empress", numeral: "III", suit: "major",
+    keywords: "Abundance, Creativity, Nurturing",
+    life: "Allow yourself to relax into the natural flow of growth and comfort.",
+    career: "Nurture your creative ideas patiently until they blossom into lucrative projects.",
+    love: "Express unconditional warmth and affection to bring deep domestic security."
+  },
+  {
+    name: "The Emperor", numeral: "IV", suit: "major",
+    keywords: "Structure, Authority, Stability",
+    life: "Bring direct order out of chaos through logic and firm self-discipline.",
+    career: "Step up firmly as a powerful, strategic leader within your professional space.",
+    love: "Establish healthy, clear boundaries to protect and stabilize your romantic partnership."
+  },
+  {
+    name: "The Hierophant", numeral: "V", suit: "major",
+    keywords: "Tradition, Guidance, Wisdom",
+    life: "Align yourself with proven belief systems or seek wise spiritual counsel.",
+    career: "Work smoothly within established organizational rules or pursue further formal education.",
+    love: "Value traditional commitment, shared moral values, and long-term relationship structures."
+  },
+  {
+    name: "The Lovers", numeral: "VI", suit: "major",
+    keywords: "Harmony, Choices, Alignment",
+    life: "Clarify your deepest personal values to make choices that truly fulfill you.",
+    career: "Build mutually beneficial partnerships based on honest communication and shared goals.",
+    love: "Enjoy a profound soul connection rooted in complete vulnerability and perfect harmony."
+  },
+  {
+    name: "The Chariot", numeral: "VII", suit: "major",
+    keywords: "Willpower, Victory, Control",
+    life: "Drive yourself forward by balancing opposing emotional forces with fierce determination.",
+    career: "Overcome intense workplace competition through aggressive focus and unyielding discipline.",
+    love: "Take absolute command of your love life with clear, confident intentions."
+  },
+  {
+    name: "Strength", numeral: "VIII", suit: "major",
+    keywords: "Courage, Fortitude, Compassion",
+    life: "Endure your current hardships with quiet grace, patience, and internal resilience.",
+    career: "Tackle difficult professional challenges through gentle persuasion rather than aggressive force.",
+    love: "Calm your partner's inner fears using deep empathy and soft, loving reassurance."
+  },
+  {
+    name: "The Hermit", numeral: "IX", suit: "major",
+    keywords: "Introspection, Solitude, Guidance",
+    life: "Withdraw temporarily from external noise to find your true inner light.",
+    career: "Take a step back to reevaluate your long-term career satisfaction independently.",
+    love: "Focus entirely on self-love and healing before seeking an external romantic connection."
+  },
+  {
+    name: "Wheel of Fortune", numeral: "X", suit: "major",
+    keywords: "Destiny, Cycles, Change",
+    life: "Adapt gracefully to life's inevitable, ever-shifting highs and sudden lows.",
+    career: "Prepare for unexpected shifts in luck that create exciting new professional pathways.",
+    love: "Trust the timing of fate to bring sudden, destined movements to your relationship."
+  },
+  {
+    name: "Justice", numeral: "XI", suit: "major",
+    keywords: "Fairness, Truth, Accountability",
+    life: "Accept total responsibility for your choices under the law of cause and effect.",
+    career: "Expect complete fairness and legal clarity regarding workplace contracts or disputes.",
+    love: "Approach your relationship with absolute honesty, balance, and equal emotional weight."
+  },
+  {
+    name: "The Hanged Man", numeral: "XII", suit: "major",
+    keywords: "Pause, Surrender, Perspective",
+    life: "Surrender your need for control and view your life from a fresh angle.",
+    career: "Accept a temporary professional freeze as a vital chance to reset goals.",
+    love: "Let go of rigid romantic expectations to gain a deeper emotional understanding."
+  },
+  {
+    name: "Death", numeral: "XIII", suit: "major",
+    keywords: "Transformation, Endings, Rebirth",
+    life: "Shed old ways of being to clear the path for vital rebirth.",
+    career: "Leave a stagnant job or outdated professional identity behind for something greater.",
+    love: "Allow an unhealthy dynamic to end so a completely renewed heart can emerge."
+  },
+  {
+    name: "Temperance", numeral: "XIV", suit: "major",
+    keywords: "Balance, Moderation, Patience",
+    life: "Practice calm moderation and avoid extreme reactions to find ultimate peace.",
+    career: "Blend diverse workplace elements smoothly through patient diplomacy and steady cooperation.",
+    love: "Build a stable, deeply cooperative bond by compromising beautifully with your partner."
+  },
+  {
+    name: "The Devil", numeral: "XV", suit: "major",
+    keywords: "Attachment, Shadow, Liberation",
+    life: "Confront the unhealthy habits or toxic loops that trap your spirit.",
+    career: "Break free from unfulfilling golden handcuffs or toxic, manipulative corporate dynamics.",
+    love: "Recognize where codependency or obsessive lust is blocking true, healthy emotional intimacy."
+  },
+  {
+    name: "The Tower", numeral: "XVI", suit: "major",
+    keywords: "Upheaval, Revelation, Awakening",
+    life: "Embrace the sudden, chaotic collapse of unstable structures and false illusions.",
+    career: "Rebuild your professional path from scratch after a sudden, unexpected shake-up.",
+    love: "Shatter a dishonest connection to pave the way for genuine foundation building."
+  },
+  {
+    name: "The Star", numeral: "XVII", suit: "major",
+    keywords: "Hope, Serenity, Healing",
+    life: "Breathe deeply as a beautiful wave of rejuvenation and peace fills your spirit.",
+    career: "Trust that your professional dreams are under lucky, divine cosmic protection.",
+    love: "Open your heart fully to hope, inviting deep emotional healing and renewal."
+  },
+  {
+    name: "The Moon", numeral: "XVIII", suit: "major",
+    keywords: "Illusion, Anxiety, Intuition",
+    life: "Navigate through psychological fog and anxieties by trusting your sharp intuition.",
+    career: "Avoid signing immediate business deals until all hidden agendas are brought to light.",
+    love: "Address unspoken insecurities before they create false illusions in your partnership."
+  },
+  {
+    name: "The Sun", numeral: "XIX", suit: "major",
+    keywords: "Joy, Success, Vitality",
+    life: "Bask in absolute clarity, vibrant health, and unyielding everyday optimism.",
+    career: "Enjoy major public recognition, brilliant achievements, and smooth career expansion.",
+    love: "Celebrate a radiantly happy, transparent romance full of warm, childlike fun."
+  },
+  {
+    name: "Judgement", numeral: "XX", suit: "major",
+    keywords: "Awakening, Purpose, Absolution",
+    life: "Rise to a brand new state of consciousness and forgive past mistakes.",
+    career: "Step boldly into your true professional calling without any further hesitation.",
+    love: "Evaluate your relationship history with compassion to make a vital romantic shift."
+  },
+  {
+    name: "The World", numeral: "XXI", suit: "major",
+    keywords: "Completion, Wholeness, Fulfillment",
+    life: "Celebrate the triumphant fulfillment of a major, long-term evolutionary cycle.",
+    career: "Achieve the absolute pinnacle of your career goals with grand international possibilities.",
+    love: "Enjoy a deep sense of absolute wholeness and ultimate emotional completion together."
+  },
 
+  // Suit of Wands
+  {
+    name: "Ace of Wands", numeral: "1", suit: "wands",
+    keywords: "Inspiration, Spark, Action",
+    life: "A sudden burst of raw creative energy sparks fresh enthusiasm.",
+    career: "Launch a passionate, innovative new project with bold, driving ambition.",
+    love: "Experience a thrilling, fiery spark of physical attraction or romantic potential."
+  },
+  {
+    name: "Two of Wands", numeral: "2", suit: "wands",
+    keywords: "Planning, Future, Progress",
+    life: "Stand at a critical crossroads and look toward expanding your horizons.",
+    career: "Formulate long-term global business strategies before taking your next step.",
+    love: "Decide together whether to step out of your shared comfort zones permanently."
+  },
+  {
+    name: "Three of Wands", numeral: "3", suit: "wands",
+    keywords: "Expansion, Foresight, Growth",
+    life: "Watch your long-term plans take shape as your horizons expand beautifully.",
+    career: "Prepare for overseas opportunities, travel, or massive expansion of your business.",
+    love: "Look toward the future together with absolute confidence and shared travel plans."
+  },
+  {
+    name: "Four of Wands", numeral: "4", suit: "wands",
+    keywords: "Celebration, Harmony, Homecoming",
+    life: "Enjoy a joyful milestone or warm gathering surrounded by supportive loved ones.",
+    career: "Celebrate a major team victory or the completion of a secure project.",
+    love: "Bask in a happy, stable domestic life or commit to marriage bells."
+  },
+  {
+    name: "Five of Wands", numeral: "5", suit: "wands",
+    keywords: "Conflict, Competition, Tension",
+    life: "Overcome petty arguments and clashing egos with calm, focused patience.",
+    career: "Navigate fierce professional competition or chaotic workplace brainstorming sessions successfully.",
+    love: "Resolve minor bickering by choosing cooperative listening over defensive posturing."
+  },
+  {
+    name: "Six of Wands", numeral: "6", suit: "wands",
+    keywords: "Victory, Acclaim, Pride",
+    life: "Enjoy public validation and well-deserved praise for your recent battles.",
+    career: "Step into the spotlight as your professional hard work wins widespread accolades.",
+    love: "Feel secure and deeply appreciated alongside a supportive, proud romantic partner."
+  },
+  {
+    name: "Seven of Wands", numeral: "7", suit: "wands",
+    keywords: "Defensiveness, Courage, Resilience",
+    life: "Hold your ground against external opposition with absolute moral courage.",
+    career: "Defend your innovative ideas or position confidently against professional critics.",
+    love: "Protect your relationship fiercely against outside interference or negative opinions."
+  },
+  {
+    name: "Eight of Wands", numeral: "8", suit: "wands",
+    keywords: "Speed, Momentum, Communication",
+    life: "Ride a blistering wave of swift, sudden events and clearing obstacles.",
+    career: "Expect rapid emails, immediate project progress, or sudden business travel.",
+    love: "Brace for a whirlwind romance full of intense, fast-paced emotional declarations."
+  },
+  {
+    name: "Nine of Wands", numeral: "9", suit: "wands",
+    keywords: "Resilience, Persistence, Boundaries",
+    life: "Gather your final remaining strength to push through the exhausting finish line.",
+    career: "Protect your energy and professional boundaries during a highly demanding period.",
+    love: "Keep your heart open despite past battle scars and emotional weariness."
+  },
+  {
+    name: "Ten of Wands", numeral: "10", suit: "wands",
+    keywords: "Burden, Burnout, Responsibility",
+    life: "Reevaluate heavy commitments before the crushing weight causes complete burnout.",
+    career: "Delegate excessive corporate tasks before your health suffers from extreme stress.",
+    love: "Stop carrying the entire emotional weight of the partnership all by yourself."
+  },
+  {
+    name: "Page of Wands", numeral: "11", suit: "wands",
+    keywords: "Enthusiasm, Curiosity, Discovery",
+    life: "Embrace a youthful, free-spirited curiosity toward new hobbies and paths.",
+    career: "Welcome exciting, fresh ideas or entry-level creative roles with open arms.",
+    love: "Enjoy a fun, highly adventurous flirtation full of spontaneous conversational sparks."
+  },
+  {
+    name: "Knight of Wands", numeral: "12", suit: "wands",
+    keywords: "Passion, Adventure, Impulsiveness",
+    life: "Charge forward fiercely into new adventures, but watch out for pure recklessness.",
+    career: "Pursue big business targets passionately, making sure to finish what you start.",
+    love: "Dive into a deeply passionate, charming whirlwind that might burn out quickly."
+  },
+  {
+    name: "Queen of Wands", numeral: "13", suit: "wands",
+    keywords: "Confidence, Charisma, Independence",
+    life: "Radiate immense warmth, social joy, and absolute self-assured magnetic energy.",
+    career: "Lead your professional network boldly using your innate, creative personal power.",
+    love: "Attract deep adoration by remaining fiercely independent and fully confident."
+  },
+  {
+    name: "King of Wands", numeral: "14", suit: "wands",
+    keywords: "Leadership, Vision, Execution",
+    life: "Lead your life with bold intent, taking calculated risks like an expert.",
+    career: "Command immediate workplace respect through your visionary, entrepreneurial management style.",
+    love: "Steer your relationship dynamic forward with protective, highly passionate loyalty."
+  },
+
+  // Suit of Cups
+  {
+    name: "Ace of Cups", numeral: "1", suit: "cups",
+    keywords: "Love, Overflow, Intuition",
+    life: "Open your soul to a beautiful, overwhelming wave of pure spiritual fulfillment.",
+    career: "Find deep artistic inspiration or a highly rewarding vocational calling.",
+    love: "Welcome a glorious, fresh emotional dawn or unconditional new romantic bond."
+  },
+  {
+    name: "Two of Cups", numeral: "2", suit: "cups",
+    keywords: "Connection, Partnership, Alignment",
+    life: "Nurture beautiful relationships based on deep mutual respect and equality.",
+    career: "Form a highly harmonious, balanced business alliance rooted in shared ideals.",
+    love: "Enjoy a flawless soulmate connection with complete vulnerability and mutual devotion."
+  },
+  {
+    name: "Three of Cups", numeral: "3", suit: "cups",
+    keywords: "Celebration, Friendship, Community",
+    life: "Gather with your precious inner circle to celebrate life's emotional riches.",
+    career: "Collaborate joyfully with a creative, deeply supportive team of professionals.",
+    love: "Build a relationship full of social laughter, group support, and lightheartedness."
+  },
+  {
+    name: "Four of Cups", numeral: "4", suit: "cups",
+    keywords: "Apathy, Contemplation, Stagnation",
+    life: "Look inward to understand your temporary sense of boredom and emotional discontent.",
+    career: "Avoid completely overlooking fresh professional offers due to current mental apathy.",
+    love: "Shake off romantic stagnation to appreciate the quiet love being offered to you."
+  },
+  {
+    name: "Five of Cups", numeral: "5", suit: "cups",
+    keywords: "Regret, Loss, Disappointment",
+    life: "Acknowledge your genuine grief, but remember that beautiful things still remain.",
+    career: "Move past a failed project or professional setback without obsessing over loss.",
+    love: "Turn away from past heartbreaks to see the love standing right beside you."
+  },
+  {
+    name: "Six of Cups", numeral: "6", suit: "cups",
+    keywords: "Nostalgia, Childhood, Healing",
+    life: "Bring a simpler, gentler, and deeply innocent energy to your everyday routine.",
+    career: "Revive a past artistic passion or reconnect with an encouraging old coworker.",
+    love: "Experience comfort through sweet nostalgia, childhood sweethearts, or inner child healing."
+  },
+  {
+    name: "Seven of Cups", numeral: "7", suit: "cups",
+    keywords: "Choices, Illusions, Fantasies",
+    life: "Ground your floating daydreams before you get completely overwhelmed by options.",
+    career: "Carefully analyze various career paths instead of chasing unrealistic professional illusions.",
+    love: "Look past superficial romantic fantasies to choose a grounded, real connection."
+  },
+  {
+    name: "Eight of Cups", numeral: "8", suit: "cups",
+    keywords: "Transition, Walking Away, Truth",
+    life: "Make the tough choice to leave a familiar situation that no longer fulfills you.",
+    career: "Walk away from an uninspiring job to seek your true spiritual calling.",
+    love: "Leave a stagnant emotional dynamic behind to pursue deeper soul evolution."
+  },
+  {
+    name: "Nine of Cups", numeral: "9", suit: "cups",
+    keywords: "Contentment, Gratitude, Satisfaction",
+    life: "Bask in rich personal satisfaction and appreciate your current earthly blessings.",
+    career: "Achieve exactly what you set out to build, enjoying high material comfort.",
+    love: "Experience the ultimate wish come true, leading to deep emotional security."
+  },
+  {
+    name: "Ten of Cups", numeral: "10", suit: "cups",
+    keywords: "Bliss, Harmony, Alignment",
+    life: "Enjoy lasting peace as your internal world aligns perfectly with your environment.",
+    career: "Thrive in an exceptionally supportive, caring corporate culture that feels like family.",
+    love: "Attain total romantic completion, domestic bliss, and absolute generational harmony."
+  },
+  {
+    name: "Page of Cups", numeral: "11", suit: "cups",
+    keywords: "Creativity, Sensitivity, Message",
+    life: "Stay open-hearted and curious, ready for intuitive messages from the universe.",
+    career: "Explore a surprising new creative outlet or artistic project without judgment.",
+    love: "Welcome sweet emotional news, a tender apology, or a poetic crush."
+  },
+  {
+    name: "Knight of Cups", numeral: "12", suit: "cups",
+    keywords: "Charm, Romance, Idealism",
+    life: "Follow your sensitive heart and deep imagination wherever they gracefully lead.",
+    career: "Present your artistic visions confidently, but stay grounded in practical execution.",
+    love: "Accept a classic romantic offer from a charming, deeply poetic suitor."
+  },
+  {
+    name: "Queen of Cups", numeral: "13", suit: "cups",
+    keywords: "Empathy, Intuition, Healing",
+    life: "Act as a safe, highly compassionate harbor for your own tender emotions.",
+    career: "Use your sharp emotional intelligence to navigate difficult corporate workplace diplomacy.",
+    love: "Offer profound non-judgmental empathy, binding your hearts with unbreakable spiritual glue."
+  },
+  {
+    name: "King of Cups", numeral: "14", suit: "cups",
+    keywords: "Balance, Diplomacy, Maturity",
+    life: "Master your emotions completely, balancing deep intuition with cold, hard logic.",
+    career: "Handle intense workplace crises with calm diplomacy and mature executive wisdom.",
+    love: "Provide a perfectly stable, emotionally secure space for your partner to thrive."
+  },
+
+  // Suit of Swords
+  {
+    name: "Ace of Swords", numeral: "1", suit: "swords",
+    keywords: "Clarity, Truth, Breakthrough",
+    life: "A sudden flash of intense insight cuts cleanly through mental fog.",
+    career: "Seize a powerful intellectual breakthrough to execute highly decisive career moves.",
+    love: "Cut through exhausting confusion by having a completely honest conversation."
+  },
+  {
+    name: "Two of Swords", numeral: "2", suit: "swords",
+    keywords: "Stalemate, Indecision, Avoidance",
+    life: "Remove your self-imposed blindfold and face the difficult facts directly.",
+    career: "Break an uncomfortable workplace stalemate by choosing a definitive strategic direction.",
+    love: "Stop avoiding an inevitable relationship choice out of fear of conflict."
+  },
+  {
+    name: "Three of Swords", numeral: "3", suit: "swords",
+    keywords: "Heartbreak, Grief, Release",
+    life: "Allow yourself to weep fully so true emotional healing can begin.",
+    career: "Process the sudden, sharp disappointment of a lost business deal objectively.",
+    love: "Endure a painful separation or betrayal, clearing out toxic relational energy."
+  },
+  {
+    name: "Four of Swords", numeral: "4", suit: "swords",
+    keywords: "Rest, Recovery, Sanctuary",
+    life: "Urgently withdraw from everyday chaos to rest your over-stressed mind.",
+    career: "Take a deliberate, peaceful mental health day to prevent serious burnout.",
+    love: "Step back from ongoing romantic arguments to find quiet inner peace."
+  },
+  {
+    name: "Five of Swords", numeral: "5", suit: "swords",
+    keywords: "Conflict, Hostility, Hollow Win",
+    life: "Consider if winning an argument is truly worth destroying your peace.",
+    career: "Navigate cutthroat corporate behavior carefully, avoiding petty office politics entirely.",
+    love: "Drop your pride before an aggressive fight leaves both partners defeated."
+  },
+  {
+    name: "Six of Swords", numeral: "6", suit: "swords",
+    keywords: "Transition, Relief, Moving On",
+    life: "Leave a chaotic situation behind to drift toward much calmer waters.",
+    career: "Transition smoothly away from a stressful job toward a peaceful workplace.",
+    love: "Heal slowly as you leave a heavy, painful relationship dynamic behind."
+  },
+  {
+    name: "Seven of Swords", numeral: "7", suit: "swords",
+    keywords: "Strategy, Stealth, Deception",
+    life: "Keep your plans strictly private and watch out for hidden motives.",
+    career: "Use clever independence and quiet tactics to outsmart a professional challenge.",
+    love: "Address sneaky behavior or a serious lack of trust before it worsens."
+  },
+  {
+    name: "Eight of Swords", numeral: "8", suit: "swords",
+    keywords: "Trapped, Anxiety, Illusion",
+    life: "Realize your binds are loose and you can walk away anytime.",
+    career: "Overcome a victim mentality regarding a job you actually have power to leave.",
+    love: "Recognize that your own mental fears are creating a prison of romantic helplessness."
+  },
+  {
+    name: "Nine of Swords", numeral: "9", suit: "swords",
+    keywords: "Anxiety, Worry, Insomnia",
+    life: "Ground yourself to realize most middle-of-the-night terrors are completely imaginary.",
+    career: "Stop letting worst-case scenarios ruin your sleep and focus on objective facts.",
+    love: "Reach out for support instead of suffering in a cycle of silent relationship anxiety."
+  },
+  {
+    name: "Ten of Swords", numeral: "10", suit: "swords",
+    keywords: "Rock Bottom, Endings, Dawn",
+    life: "Accept a crushing ending, knowing that you can only go up from here.",
+    career: "A difficult project or role has finished permanently; prepare for a fresh start.",
+    love: "Let a broken relationship hit rock bottom so a new dawn can emerge."
+  },
+  {
+    name: "Page of Swords", numeral: "11", suit: "swords",
+    keywords: "Agility, Curiosity, Objectivity",
+    life: "Speak your intellectual truths clearly and gather data with fierce objectivity.",
+    career: "Bring brilliant, analytical ideas and sharp communication skills to your team.",
+    love: "Keep your communication energetic, logical, and entirely free from heavy emotional drama."
+  },
+  {
+    name: "Knight of Swords", numeral: "12", suit: "swords",
+    keywords: "Ambition, Speed, Logic",
+    life: "Charge headfirst toward your goals using pure, blinding intellectual energy.",
+    career: "Execute sudden business plans masterfully, but avoid running over your coworkers.",
+    love: "Communicate with intense directness, though be careful not to sound insensitive."
+  },
+  {
+    name: "Queen of Swords", numeral: "13", suit: "swords",
+    keywords: "Objectivity, Wit, Boundaries",
+    life: "Cut through lies and illusions using total logic and absolute honesty.",
+    career: "Establish unshakeable professional boundaries and demand clear, truthful corporate metrics.",
+    love: "Love with total transparency, requiring absolute intellectual honesty from your partner."
+  },
+  {
+    name: "King of Swords", numeral: "14", suit: "swords",
+    keywords: "Authority, Truth, Logic",
+    life: "Lead through strict ethical standards and analytical reasoning above all else.",
+    career: "Make an impartial, highly logical judgment regarding a complex workplace dilemma.",
+    love: "Remove emotional hysterics to evaluate your relationship with absolute fairness."
+  },
+
+  // Suit of Pentacles
+  {
+    name: "Ace of Pentacles", numeral: "1", suit: "pentacles",
+    keywords: "Prosperity, Abundance, Grounding",
+    life: "Receive a tangible, highly fortunate seed of physical growth from the universe.",
+    career: "Accept an excellent new job offer or lucrative business foundation patiently.",
+    love: "Build a deeply grounded, stable relationship that promises long-term physical comfort."
+  },
+  {
+    name: "Two of Pentacles", numeral: "2", suit: "pentacles",
+    keywords: "Balance, Adaptability, Priorities",
+    life: "Adapt dynamically to life's ever-shifting daily responsibilities and priorities.",
+    career: "Juggle multiple tasks, investments, or career roles with flexible grace.",
+    love: "Maintain your sense of humor while balancing dates with a busy schedule."
+  },
+  {
+    name: "Three of Pentacles", numeral: "3", suit: "pentacles",
+    keywords: "Collaboration, Mastery, Teamwork",
+    life: "Achieve meaningful success by listening closely to other talented individuals.",
+    career: "Combine diverse professional skills to build a high-quality cornerstone project.",
+    love: "Work together smoothly to construct a solid, deeply cooperative life partnership."
+  },
+  {
+    name: "Four of Pentacles", numeral: "4", suit: "pentacles",
+    keywords: "Stability, Control, Scarcity",
+    life: "Loosen your over-controlling grip on your surroundings to let fresh energy flow.",
+    career: "Protect your financial security, but avoid resisting necessary corporate changes out of fear.",
+    love: "Stop hoarding your emotions or suffocating your partner with extreme possessiveness."
+  },
+  {
+    name: "Five of Pentacles", numeral: "5", suit: "pentacles",
+    keywords: "Hardship, Isolation, Scarcity",
+    life: "Look up from your immediate struggle; warm support is incredibly close by.",
+    career: "Weather a temporary financial loss or workplace isolation by seeking community help.",
+    love: "Stick together through tough economic times rather than pushing each other away."
+  },
+  {
+    name: "Six of Pentacles", numeral: "6", suit: "pentacles",
+    keywords: "Generosity, Sharing, Balance",
+    life: "Participate joyfully in a beautiful, balanced ecosystem of mutual support.",
+    career: "Seek out an encouraging professional mentor or generously share your resource wealth.",
+    love: "Enjoy a relationship where emotional giving and receiving are in perfect balance."
+  },
+  {
+    name: "Seven of Pentacles", numeral: "7", suit: "pentacles",
+    keywords: "Patience, Assessment, Harvest",
+    life: "Pause to review your overall progress before doing any more exhausting work.",
+    career: "Trust that your professional investments require long-term vision to ripen fully.",
+    love: "Allow your shared connection to grow naturally without rushing milestones impatiently."
+  },
+  {
+    name: "Eight of Pentacles", numeral: "8", suit: "pentacles",
+    keywords: "Diligence, Craft, Mastery",
+    life: "Diligently hone your personal development skills with extreme attention to detail.",
+    career: "Commit fully to learning a craft; your repetitive effort guarantees massive expertise.",
+    love: "Work continuously and consciously on building a healthy daily relationship routine."
+  },
+  {
+    name: "Nine of Pentacles", numeral: "9", suit: "pentacles",
+    keywords: "Self-Reliance, Luxury, Independent",
+    life: "Enjoy the beautiful, secure life you created through your own discipline.",
+    career: "Thrive as a highly successful, independent operator who answers to no one.",
+    love: "Appreciate your own space, choosing a partner only if they elevate your comfort."
+  },
+  {
+    name: "Ten of Pentacles", numeral: "10", suit: "pentacles",
+    keywords: "Legacy, Wealth, Foundation",
+    life: "Establish secure, enduring structural stability that honors your family roots.",
+    career: "Build massive, long-term generational wealth or celebrate major company permanence.",
+    love: "Enjoy a deeply traditional romance supported by strong, loving family approval."
+  },
+  {
+    name: "Page of Pentacles", numeral: "11", suit: "pentacles",
+    keywords: "Ambition, Manifest, Planning",
+    life: "Approach your personal goals with a practical, step-by-step physical mindset.",
+    career: "Welcome a highly promising entry-level financial opportunity or technical course.",
+    love: "Lay down reliable, very practical plans for a secure romantic future together."
+  },
+  {
+    name: "Knight of Pentacles", numeral: "12", suit: "pentacles",
+    keywords: "Reliability, Routine, Grind",
+    life: "Dedicate yourself to a steady daily grind, honoring every single commitment.",
+    career: "Guarantee ultimate project completion through methodical, highly organized hard work.",
+    love: "Provide absolute, unshakeable loyalty and dependable romantic devotion every day."
+  },
+  {
+    name: "Queen of Pentacles", numeral: "13", suit: "pentacles",
+    keywords: "Nurturing, Security, Comfort",
+    life: "Balance sharp business savvy with a warm, comforting domestic sanctuary.",
+    career: "Manage corporate resources practically while taking excellent care of your team.",
+    love: "Create a cozy, materially secure home oasis alongside your beloved partner."
+  },
+  {
+    name: "King of Pentacles", numeral: "14", suit: "pentacles",
+    keywords: "Mastery, Abundance, Enterprise",
+    life: "Use your hard-won earthly success to build a secure, flourishing environment.",
+    career: "Lead your commercial business empire with steady, exceptionally reliable financial wisdom.",
+    love: "Act as a generous, unshakeable provider who keeps the relationship completely stable."
+  }
+];
 // ─── REAL CARD ARTWORK (public-domain Rider-Waite-Smith deck, embedded as base64) ──
 // Images are embedded directly (data URIs) so the deck works offline / inside any
 // sandboxed preview, with no dependency on hotlinking to an external image host.
@@ -993,6 +1464,25 @@ function flipCard(index) {
   if (card) card.classList.toggle('flipped');
 }
 
+// ─── CARD MEANING RENDER ───────────────────────────────────────────────────────
+function renderCardMeaning(card) {
+  return `
+    <p class="text-sm uppercase tracking-widest mb-3"
+       style="color:#a07c3a; letter-spacing:1px;">
+      ${card.keywords}
+    </p>
+    <p class="text-base leading-relaxed mb-2" style="color:#cbd5e0;">
+      <span style="color:#c9a961; font-weight:600;">Life —</span> ${card.life}
+    </p>
+    <p class="text-base leading-relaxed mb-2" style="color:#cbd5e0;">
+      <span style="color:#c9a961; font-weight:600;">Career —</span> ${card.career}
+    </p>
+    <p class="text-base leading-relaxed" style="color:#cbd5e0;">
+      <span style="color:#c9a961; font-weight:600;">Love —</span> ${card.love}
+    </p>
+  `;
+}
+
 // ─── READING TEXT ────────────────────────────────────────────────────────────────
 function showReading(skipFlip = false) {
 
@@ -1045,10 +1535,7 @@ function showReading(skipFlip = false) {
                 ${clarifier.name}
               </h4>
 
-              <p class="text-base italic leading-relaxed"
-                 style="color:#cbd5e0;">
-                ${clarifier.meaning}
-              </p>
+              ${renderCardMeaning(clarifier)}
             </div>
 
           </div>
@@ -1077,10 +1564,9 @@ function showReading(skipFlip = false) {
           ${card.name}
         </h3>
 
-        <p class="text-base italic leading-relaxed mb-4"
-           style="color:#cbd5e0;">
-          ${card.meaning}
-        </p>
+        <div class="mb-4">
+          ${renderCardMeaning(card)}
+        </div>
 
         <button
           onclick="drawClarifier(${i})"
