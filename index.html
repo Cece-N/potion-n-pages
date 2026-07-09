@@ -125,561 +125,863 @@
 
   <script>
 // ─── TAROT DECK ────────────────────────────────────────────────────────────────
-const tarotDeck = [
-  // Major Arcana
-  {
+const tarotDeck = [{
     name: "The Fool", numeral: "0", suit: "major",
     keywords: "Beginnings, Spontaneity, Faith",
     life: "A fresh chapter opens up a world of pure potential and ultimate freedom.",
     career: "Take a calculated leap into a completely new role or bold business venture.",
-    love: "Embrace exciting, spontaneous connections without carrying any heavy past baggage."
+    love: "Embrace exciting, spontaneous connections without carrying any heavy past baggage.",
+    keywordsReversed: "Recklessness, Naivety, Hesitation",
+    lifeReversed: "Reckless choices or fear of change leave you stuck in limbo.",
+    careerReversed: "A rushed decision or missed opportunity stalls your professional momentum.",
+    loveReversed: "Guard against reckless commitment or a fear of vulnerability holding you back."
   },
   {
     name: "The Magician", numeral: "I", suit: "major",
     keywords: "Manifestation, Power, Resourcefulness",
     life: "You possess every necessary tool to create your desired reality right now.",
     career: "Execute your brilliant ideas with absolute confidence and focused professional willpower.",
-    love: "Use your personal charm and clear communication to build strong relationship foundations."
+    love: "Use your personal charm and clear communication to build strong relationship foundations.",
+    keywordsReversed: "Manipulation, Untapped Potential, Deception",
+    lifeReversed: "Scattered focus or self-doubt keeps your true power dormant.",
+    careerReversed: "Watch for manipulation, empty promises, or skills left unused.",
+    loveReversed: "Dishonesty or one-sided effort undermines the connection's true potential."
   },
   {
     name: "The High Priestess", numeral: "II", suit: "major",
     keywords: "Intuition, Mystery, Subconscious",
     life: "Look beyond the surface and trust your gut feelings above all logic.",
     career: "Step back quietly and wait for hidden information to reveal itself entirely.",
-    love: "Honor the quiet mysteries of your heart rather than forcing immediate answers."
+    love: "Honor the quiet mysteries of your heart rather than forcing immediate answers.",
+    keywordsReversed: "Secrets, Disconnection, Repression",
+    lifeReversed: "Ignoring your intuition disconnects you from your own inner truth.",
+    careerReversed: "Hidden information or office secrecy clouds your next professional move.",
+    loveReversed: "Repressed feelings or unspoken secrets create distance between you two."
   },
   {
     name: "The Empress", numeral: "III", suit: "major",
     keywords: "Abundance, Creativity, Nurturing",
     life: "Allow yourself to relax into the natural flow of growth and comfort.",
     career: "Nurture your creative ideas patiently until they blossom into lucrative projects.",
-    love: "Express unconditional warmth and affection to bring deep domestic security."
+    love: "Express unconditional warmth and affection to bring deep domestic security.",
+    keywordsReversed: "Creative Block, Dependence, Neglect",
+    lifeReversed: "Neglecting self-care leaves your creative and emotional wellspring running dry.",
+    careerReversed: "Creative block or overreliance on others stalls your productive momentum.",
+    loveReversed: "Smothering attention or emotional neglect throws the relationship out of balance."
   },
   {
     name: "The Emperor", numeral: "IV", suit: "major",
     keywords: "Structure, Authority, Stability",
     life: "Bring direct order out of chaos through logic and firm self-discipline.",
     career: "Step up firmly as a powerful, strategic leader within your professional space.",
-    love: "Establish healthy, clear boundaries to protect and stabilize your romantic partnership."
+    love: "Establish healthy, clear boundaries to protect and stabilize your romantic partnership.",
+    keywordsReversed: "Rigidity, Domination, Loss of Control",
+    lifeReversed: "Rigid control or fear of chaos keeps you from real stability.",
+    careerReversed: "Micromanagement or a loss of authority creates workplace tension.",
+    loveReversed: "Controlling behavior or a power struggle destabilizes the partnership."
   },
   {
     name: "The Hierophant", numeral: "V", suit: "major",
     keywords: "Tradition, Guidance, Wisdom",
     life: "Align yourself with proven belief systems or seek wise spiritual counsel.",
     career: "Work smoothly within established organizational rules or pursue further formal education.",
-    love: "Value traditional commitment, shared moral values, and long-term relationship structures."
+    love: "Value traditional commitment, shared moral values, and long-term relationship structures.",
+    keywordsReversed: "Rebellion, Nonconformity, Restriction",
+    lifeReversed: "Question rigid traditions and carve out your own unconventional path.",
+    careerReversed: "Break away from outdated corporate rules that no longer serve you.",
+    loveReversed: "Unconventional love defies traditional expectations and rigid relationship norms."
   },
   {
     name: "The Lovers", numeral: "VI", suit: "major",
     keywords: "Harmony, Choices, Alignment",
     life: "Clarify your deepest personal values to make choices that truly fulfill you.",
     career: "Build mutually beneficial partnerships based on honest communication and shared goals.",
-    love: "Enjoy a profound soul connection rooted in complete vulnerability and perfect harmony."
+    love: "Enjoy a profound soul connection rooted in complete vulnerability and perfect harmony.",
+    keywordsReversed: "Imbalance, Disharmony, Misalignment",
+    lifeReversed: "Misaligned values create inner conflict between your head and heart.",
+    careerReversed: "A poorly matched partnership or team creates friction and disharmony.",
+    loveReversed: "Disconnection or unequal effort leaves the relationship out of balance."
   },
   {
     name: "The Chariot", numeral: "VII", suit: "major",
     keywords: "Willpower, Victory, Control",
     life: "Drive yourself forward by balancing opposing emotional forces with fierce determination.",
     career: "Overcome intense workplace competition through aggressive focus and unyielding discipline.",
-    love: "Take absolute command of your love life with clear, confident intentions."
+    love: "Take absolute command of your love life with clear, confident intentions.",
+    keywordsReversed: "Lack of Direction, Aggression, Obstacles",
+    lifeReversed: "Scattered willpower and self-doubt stall your forward momentum entirely.",
+    careerReversed: "Lack of direction or internal conflict derails an important project.",
+    loveReversed: "Aggression or a lack of compromise steers the relationship off course."
   },
   {
     name: "Strength", numeral: "VIII", suit: "major",
     keywords: "Courage, Fortitude, Compassion",
     life: "Endure your current hardships with quiet grace, patience, and internal resilience.",
     career: "Tackle difficult professional challenges through gentle persuasion rather than aggressive force.",
-    love: "Calm your partner's inner fears using deep empathy and soft, loving reassurance."
+    love: "Calm your partner's inner fears using deep empathy and soft, loving reassurance.",
+    keywordsReversed: "Self-Doubt, Weakness, Insecurity",
+    lifeReversed: "Self-doubt and raw insecurity chip away at your inner resilience.",
+    careerReversed: "Impatience or a loss of confidence undermines your professional standing.",
+    loveReversed: "Insecurity or controlling jealousy erodes trust between you and your partner."
   },
   {
     name: "The Hermit", numeral: "IX", suit: "major",
     keywords: "Introspection, Solitude, Guidance",
     life: "Withdraw temporarily from external noise to find your true inner light.",
     career: "Take a step back to reevaluate your long-term career satisfaction independently.",
-    love: "Focus entirely on self-love and healing before seeking an external romantic connection."
+    love: "Focus entirely on self-love and healing before seeking an external romantic connection.",
+    keywordsReversed: "Isolation, Loneliness, Withdrawal",
+    lifeReversed: "Excessive isolation tips into loneliness and disconnection from others.",
+    careerReversed: "Refusing outside guidance leaves you isolated and stuck on a plateau.",
+    loveReversed: "Withdrawing too far inward creates painful distance from your partner."
   },
   {
     name: "Wheel of Fortune", numeral: "X", suit: "major",
     keywords: "Destiny, Cycles, Change",
     life: "Adapt gracefully to life's inevitable, ever-shifting highs and sudden lows.",
     career: "Prepare for unexpected shifts in luck that create exciting new professional pathways.",
-    love: "Trust the timing of fate to bring sudden, destined movements to your relationship."
+    love: "Trust the timing of fate to bring sudden, destined movements to your relationship.",
+    keywordsReversed: "Bad Luck, Resistance, Stagnation",
+    lifeReversed: "Resisting change traps you in a frustrating cycle of stagnation.",
+    careerReversed: "An unlucky break or resistance to change stalls professional progress.",
+    loveReversed: "Repeating old patterns keeps the relationship locked in stagnant cycles."
   },
   {
     name: "Justice", numeral: "XI", suit: "major",
     keywords: "Fairness, Truth, Accountability",
     life: "Accept total responsibility for your choices under the law of cause and effect.",
     career: "Expect complete fairness and legal clarity regarding workplace contracts or disputes.",
-    love: "Approach your relationship with absolute honesty, balance, and equal emotional weight."
+    love: "Approach your relationship with absolute honesty, balance, and equal emotional weight.",
+    keywordsReversed: "Unfairness, Dishonesty, Avoiding Accountability",
+    lifeReversed: "Avoiding accountability or facing unfair treatment throws your balance off.",
+    careerReversed: "Dishonesty or an unresolved dispute threatens your professional integrity.",
+    loveReversed: "Imbalance or dishonesty in the relationship demands honest reckoning."
   },
   {
     name: "The Hanged Man", numeral: "XII", suit: "major",
     keywords: "Pause, Surrender, Perspective",
     life: "Surrender your need for control and view your life from a fresh angle.",
     career: "Accept a temporary professional freeze as a vital chance to reset goals.",
-    love: "Let go of rigid romantic expectations to gain a deeper emotional understanding."
+    love: "Let go of rigid romantic expectations to gain a deeper emotional understanding.",
+    keywordsReversed: "Stalling, Resistance, Martyrdom",
+    lifeReversed: "Needless stalling or self-sacrifice keeps you stuck without real growth.",
+    careerReversed: "Resisting a necessary pause delays the insight your career actually needs.",
+    loveReversed: "Martyrdom or one-sided sacrifice leaves you feeling resentful and unseen."
   },
   {
     name: "Death", numeral: "XIII", suit: "major",
     keywords: "Transformation, Endings, Rebirth",
     life: "Shed old ways of being to clear the path for vital rebirth.",
     career: "Leave a stagnant job or outdated professional identity behind for something greater.",
-    love: "Allow an unhealthy dynamic to end so a completely renewed heart can emerge."
+    love: "Allow an unhealthy dynamic to end so a completely renewed heart can emerge.",
+    keywordsReversed: "Resistance to Change, Stagnation, Decay",
+    lifeReversed: "Clinging to the past blocks the transformation your spirit needs.",
+    careerReversed: "Resisting an ending prolongs a stagnant, unfulfilling professional chapter.",
+    loveReversed: "Fear of letting go keeps a fading relationship on life support."
   },
   {
     name: "Temperance", numeral: "XIV", suit: "major",
     keywords: "Balance, Moderation, Patience",
     life: "Practice calm moderation and avoid extreme reactions to find ultimate peace.",
     career: "Blend diverse workplace elements smoothly through patient diplomacy and steady cooperation.",
-    love: "Build a stable, deeply cooperative bond by compromising beautifully with your partner."
+    love: "Build a stable, deeply cooperative bond by compromising beautifully with your partner.",
+    keywordsReversed: "Imbalance, Excess, Discord",
+    lifeReversed: "Extremes and imbalance disrupt the harmony you've worked to build.",
+    careerReversed: "Impatience or overcommitment creates discord within your professional life.",
+    loveReversed: "Excess or a lack of compromise pulls the relationship out of sync."
   },
   {
     name: "The Devil", numeral: "XV", suit: "major",
     keywords: "Attachment, Shadow, Liberation",
     life: "Confront the unhealthy habits or toxic loops that trap your spirit.",
     career: "Break free from unfulfilling golden handcuffs or toxic, manipulative corporate dynamics.",
-    love: "Recognize where codependency or obsessive lust is blocking true, healthy emotional intimacy."
+    love: "Recognize where codependency or obsessive lust is blocking true, healthy emotional intimacy.",
+    keywordsReversed: "Breaking Free, Releasing Control, Awareness",
+    lifeReversed: "Growing awareness helps you finally break free from limiting patterns.",
+    careerReversed: "You're ready to release an unhealthy grip on status or overwork.",
+    loveReversed: "Reclaiming independence frees you from an unhealthy, codependent attachment."
   },
   {
     name: "The Tower", numeral: "XVI", suit: "major",
     keywords: "Upheaval, Revelation, Awakening",
     life: "Embrace the sudden, chaotic collapse of unstable structures and false illusions.",
     career: "Rebuild your professional path from scratch after a sudden, unexpected shake-up.",
-    love: "Shatter a dishonest connection to pave the way for genuine foundation building."
+    love: "Shatter a dishonest connection to pave the way for genuine foundation building.",
+    keywordsReversed: "Avoiding Disaster, Fear of Change, Delayed Collapse",
+    lifeReversed: "Avoiding necessary change only delays an inevitable, disruptive reckoning.",
+    careerReversed: "Fear keeps you clinging to an unstable job or plan.",
+    loveReversed: "Avoiding a hard truth only postpones the relationship's inevitable reckoning."
   },
   {
     name: "The Star", numeral: "XVII", suit: "major",
     keywords: "Hope, Serenity, Healing",
     life: "Breathe deeply as a beautiful wave of rejuvenation and peace fills your spirit.",
     career: "Trust that your professional dreams are under lucky, divine cosmic protection.",
-    love: "Open your heart fully to hope, inviting deep emotional healing and renewal."
+    love: "Open your heart fully to hope, inviting deep emotional healing and renewal.",
+    keywordsReversed: "Despair, Disconnection, Lost Faith",
+    lifeReversed: "Lost faith or despair clouds your ability to see hope ahead.",
+    careerReversed: "Self-doubt or disillusionment dims your professional optimism and drive.",
+    loveReversed: "Disconnection or hopelessness leaves the relationship feeling emotionally distant."
   },
   {
     name: "The Moon", numeral: "XVIII", suit: "major",
     keywords: "Illusion, Anxiety, Intuition",
     life: "Navigate through psychological fog and anxieties by trusting your sharp intuition.",
     career: "Avoid signing immediate business deals until all hidden agendas are brought to light.",
-    love: "Address unspoken insecurities before they create false illusions in your partnership."
+    love: "Address unspoken insecurities before they create false illusions in your partnership.",
+    keywordsReversed: "Releasing Fear, Clarity, Confusion Fading",
+    lifeReversed: "Confusion slowly lifts as buried fears finally rise into clarity.",
+    careerReversed: "Hidden truths surface, releasing you from lingering professional uncertainty.",
+    loveReversed: "Releasing old fears brings welcome clarity to a confusing connection."
   },
   {
     name: "The Sun", numeral: "XIX", suit: "major",
     keywords: "Joy, Success, Vitality",
     life: "Bask in absolute clarity, vibrant health, and unyielding everyday optimism.",
     career: "Enjoy major public recognition, brilliant achievements, and smooth career expansion.",
-    love: "Celebrate a radiantly happy, transparent romance full of warm, childlike fun."
+    love: "Celebrate a radiantly happy, transparent romance full of warm, childlike fun.",
+    keywordsReversed: "Temporary Sadness, Lack of Success, Doubt",
+    lifeReversed: "A temporary cloud dims your usual optimism and inner brightness.",
+    careerReversed: "Delayed recognition or minor setbacks dampen your professional confidence.",
+    loveReversed: "A brief rough patch clouds an otherwise warm, joyful connection."
   },
   {
     name: "Judgement", numeral: "XX", suit: "major",
     keywords: "Awakening, Purpose, Absolution",
     life: "Rise to a brand new state of consciousness and forgive past mistakes.",
     career: "Step boldly into your true professional calling without any further hesitation.",
-    love: "Evaluate your relationship history with compassion to make a vital romantic shift."
+    love: "Evaluate your relationship history with compassion to make a vital romantic shift.",
+    keywordsReversed: "Self-Doubt, Refusal of Self-Examination, Harsh Judgment",
+    lifeReversed: "Avoiding honest self-reflection keeps old patterns quietly repeating.",
+    careerReversed: "Self-doubt or harsh self-criticism blocks a deserved professional turning point.",
+    loveReversed: "Refusing to reflect honestly stalls healing from past relationship wounds."
   },
   {
     name: "The World", numeral: "XXI", suit: "major",
     keywords: "Completion, Wholeness, Fulfillment",
     life: "Celebrate the triumphant fulfillment of a major, long-term evolutionary cycle.",
     career: "Achieve the absolute pinnacle of your career goals with grand international possibilities.",
-    love: "Enjoy a deep sense of absolute wholeness and ultimate emotional completion together."
+    love: "Enjoy a deep sense of absolute wholeness and ultimate emotional completion together.",
+    keywordsReversed: "Incompletion, Delays, Lack of Closure",
+    lifeReversed: "An unfinished cycle leaves you short of the closure you crave.",
+    careerReversed: "Delays or loose ends keep a big goal just out of reach.",
+    loveReversed: "Unresolved issues stall the relationship short of its fullest potential."
   },
-
-  // Suit of Wands
   {
     name: "Ace of Wands", numeral: "1", suit: "wands",
     keywords: "Inspiration, Spark, Action",
     life: "A sudden burst of raw creative energy sparks fresh enthusiasm.",
     career: "Launch a passionate, innovative new project with bold, driving ambition.",
-    love: "Experience a thrilling, fiery spark of physical attraction or romantic potential."
+    love: "Experience a thrilling, fiery spark of physical attraction or romantic potential.",
+    keywordsReversed: "Delays, Blocked Energy, Frustration",
+    lifeReversed: "Creative fire fizzles as procrastination or self-doubt smothers your spark.",
+    careerReversed: "A promising venture stalls due to delays or a lack of clear direction.",
+    loveReversed: "Passion cools or a spark fails to ignite despite genuine interest."
   },
   {
     name: "Two of Wands", numeral: "2", suit: "wands",
     keywords: "Planning, Future, Progress",
     life: "Stand at a critical crossroads and look toward expanding your horizons.",
     career: "Formulate long-term global business strategies before taking your next step.",
-    love: "Decide together whether to step out of your shared comfort zones permanently."
+    love: "Decide together whether to step out of your shared comfort zones permanently.",
+    keywordsReversed: "Fear of Unknown, Poor Planning, Playing Safe",
+    lifeReversed: "Fear of the unknown keeps you clinging to a too-comfortable routine.",
+    careerReversed: "Poor planning or fear of risk stalls an important expansion.",
+    loveReversed: "Playing it safe keeps you from committing to a shared future."
   },
   {
     name: "Three of Wands", numeral: "3", suit: "wands",
     keywords: "Expansion, Foresight, Growth",
     life: "Watch your long-term plans take shape as your horizons expand beautifully.",
     career: "Prepare for overseas opportunities, travel, or massive expansion of your business.",
-    love: "Look toward the future together with absolute confidence and shared travel plans."
+    love: "Look toward the future together with absolute confidence and shared travel plans.",
+    keywordsReversed: "Delays, Obstacles, Lack of Foresight",
+    lifeReversed: "Unexpected delays test your patience as bigger plans stall out.",
+    careerReversed: "Poor foresight or setbacks slow an ambitious expansion effort.",
+    loveReversed: "Miscommunication about the future creates friction in shared plans."
   },
   {
     name: "Four of Wands", numeral: "4", suit: "wands",
     keywords: "Celebration, Harmony, Homecoming",
     life: "Enjoy a joyful milestone or warm gathering surrounded by supportive loved ones.",
     career: "Celebrate a major team victory or the completion of a secure project.",
-    love: "Bask in a happy, stable domestic life or commit to marriage bells."
+    love: "Bask in a happy, stable domestic life or commit to marriage bells.",
+    keywordsReversed: "Instability, Conflict, Transition",
+    lifeReversed: "Instability at home disrupts the celebration you were hoping for.",
+    careerReversed: "An unstable team dynamic delays a well-earned professional milestone.",
+    loveReversed: "Family tension or unresolved conflict overshadows a happy occasion."
   },
   {
     name: "Five of Wands", numeral: "5", suit: "wands",
     keywords: "Conflict, Competition, Tension",
     life: "Overcome petty arguments and clashing egos with calm, focused patience.",
     career: "Navigate fierce professional competition or chaotic workplace brainstorming sessions successfully.",
-    love: "Resolve minor bickering by choosing cooperative listening over defensive posturing."
+    love: "Resolve minor bickering by choosing cooperative listening over defensive posturing.",
+    keywordsReversed: "Avoidance, Exhaustion, Unresolved Conflict",
+    lifeReversed: "Avoiding necessary conflict lets tension quietly build under the surface.",
+    careerReversed: "Unresolved workplace competition drains your energy without any real resolution.",
+    loveReversed: "Bottled-up disagreements simmer instead of being honestly addressed."
   },
   {
     name: "Six of Wands", numeral: "6", suit: "wands",
     keywords: "Victory, Acclaim, Pride",
     life: "Enjoy public validation and well-deserved praise for your recent battles.",
     career: "Step into the spotlight as your professional hard work wins widespread accolades.",
-    love: "Feel secure and deeply appreciated alongside a supportive, proud romantic partner."
+    love: "Feel secure and deeply appreciated alongside a supportive, proud romantic partner.",
+    keywordsReversed: "Setback, Self-Doubt, Delayed Recognition",
+    lifeReversed: "A setback or lack of recognition dents your usual confidence.",
+    careerReversed: "Delayed recognition or a stalled project tests your professional ego.",
+    loveReversed: "Insecurity or one-sided effort leaves you feeling unappreciated."
   },
   {
     name: "Seven of Wands", numeral: "7", suit: "wands",
     keywords: "Defensiveness, Courage, Resilience",
     life: "Hold your ground against external opposition with absolute moral courage.",
     career: "Defend your innovative ideas or position confidently against professional critics.",
-    love: "Protect your relationship fiercely against outside interference or negative opinions."
+    love: "Protect your relationship fiercely against outside interference or negative opinions.",
+    keywordsReversed: "Overwhelm, Giving Up, Exhaustion",
+    lifeReversed: "Exhaustion tempts you to give up ground you've fought hard for.",
+    careerReversed: "Feeling overwhelmed by criticism weakens your professional resolve.",
+    loveReversed: "Constant defensiveness exhausts the relationship instead of protecting it."
   },
   {
     name: "Eight of Wands", numeral: "8", suit: "wands",
     keywords: "Speed, Momentum, Communication",
     life: "Ride a blistering wave of swift, sudden events and clearing obstacles.",
     career: "Expect rapid emails, immediate project progress, or sudden business travel.",
-    love: "Brace for a whirlwind romance full of intense, fast-paced emotional declarations."
+    love: "Brace for a whirlwind romance full of intense, fast-paced emotional declarations.",
+    keywordsReversed: "Delays, Frustration, Miscommunication",
+    lifeReversed: "Frustrating delays slow a situation that was moving quickly.",
+    careerReversed: "Miscommunication or missed deadlines stall fast-moving business plans.",
+    loveReversed: "Crossed signals or slow replies create unnecessary romantic frustration."
   },
   {
     name: "Nine of Wands", numeral: "9", suit: "wands",
     keywords: "Resilience, Persistence, Boundaries",
     life: "Gather your final remaining strength to push through the exhausting finish line.",
     career: "Protect your energy and professional boundaries during a highly demanding period.",
-    love: "Keep your heart open despite past battle scars and emotional weariness."
+    love: "Keep your heart open despite past battle scars and emotional weariness.",
+    keywordsReversed: "Burnout, Paranoia, Rigidity",
+    lifeReversed: "Exhaustion tips into burnout as your defenses grow overly rigid.",
+    careerReversed: "Stubborn resistance to help leaves you fighting battles alone.",
+    loveReversed: "Guardedness or old wounds make it hard to fully let someone in."
   },
   {
     name: "Ten of Wands", numeral: "10", suit: "wands",
     keywords: "Burden, Burnout, Responsibility",
     life: "Reevaluate heavy commitments before the crushing weight causes complete burnout.",
     career: "Delegate excessive corporate tasks before your health suffers from extreme stress.",
-    love: "Stop carrying the entire emotional weight of the partnership all by yourself."
+    love: "Stop carrying the entire emotional weight of the partnership all by yourself.",
+    keywordsReversed: "Release, Delegation, Collapse",
+    lifeReversed: "Release the excess weight you've been carrying before it breaks you.",
+    careerReversed: "Delegate overdue tasks before overwhelming responsibility leads to burnout.",
+    loveReversed: "Share the emotional load instead of carrying the relationship alone."
   },
   {
     name: "Page of Wands", numeral: "11", suit: "wands",
     keywords: "Enthusiasm, Curiosity, Discovery",
     life: "Embrace a youthful, free-spirited curiosity toward new hobbies and paths.",
     career: "Welcome exciting, fresh ideas or entry-level creative roles with open arms.",
-    love: "Enjoy a fun, highly adventurous flirtation full of spontaneous conversational sparks."
+    love: "Enjoy a fun, highly adventurous flirtation full of spontaneous conversational sparks.",
+    keywordsReversed: "Setbacks, Lack of Direction, Hesitation",
+    lifeReversed: "Scattered enthusiasm struggles to settle on any one real direction.",
+    careerReversed: "Hesitation or a lack of follow-through stalls a fresh idea.",
+    loveReversed: "Immature or noncommittal energy leaves budding romance directionless."
   },
   {
     name: "Knight of Wands", numeral: "12", suit: "wands",
     keywords: "Passion, Adventure, Impulsiveness",
     life: "Charge forward fiercely into new adventures, but watch out for pure recklessness.",
     career: "Pursue big business targets passionately, making sure to finish what you start.",
-    love: "Dive into a deeply passionate, charming whirlwind that might burn out quickly."
+    love: "Dive into a deeply passionate, charming whirlwind that might burn out quickly.",
+    keywordsReversed: "Recklessness, Impatience, Unfinished Projects",
+    lifeReversed: "Impulsive decisions leave a trail of unfinished plans behind you.",
+    careerReversed: "Recklessness or impatience derails an otherwise promising venture.",
+    loveReversed: "A hot-and-cold approach leaves your partner unsure where they stand."
   },
   {
     name: "Queen of Wands", numeral: "13", suit: "wands",
     keywords: "Confidence, Charisma, Independence",
     life: "Radiate immense warmth, social joy, and absolute self-assured magnetic energy.",
     career: "Lead your professional network boldly using your innate, creative personal power.",
-    love: "Attract deep adoration by remaining fiercely independent and fully confident."
+    love: "Attract deep adoration by remaining fiercely independent and fully confident.",
+    keywordsReversed: "Insecurity, Jealousy, Self-Doubt",
+    lifeReversed: "Insecurity dims the confident glow you usually radiate so easily.",
+    careerReversed: "Jealousy or self-doubt undermines your usual assertive leadership style.",
+    loveReversed: "Neediness or jealousy replaces your usual independent, magnetic warmth."
   },
   {
     name: "King of Wands", numeral: "14", suit: "wands",
     keywords: "Leadership, Vision, Execution",
     life: "Lead your life with bold intent, taking calculated risks like an expert.",
     career: "Command immediate workplace respect through your visionary, entrepreneurial management style.",
-    love: "Steer your relationship dynamic forward with protective, highly passionate loyalty."
+    love: "Steer your relationship dynamic forward with protective, highly passionate loyalty.",
+    keywordsReversed: "Impulsiveness, Domination, Poor Judgment",
+    lifeReversed: "Impulsive overreach or stubborn pride clouds your usual sound judgment.",
+    careerReversed: "Overbearing leadership or poor delegation frustrates your entire team.",
+    loveReversed: "A dominating approach leaves little room for your partner's voice."
   },
-
-  // Suit of Cups
   {
     name: "Ace of Cups", numeral: "1", suit: "cups",
     keywords: "Love, Overflow, Intuition",
     life: "Open your soul to a beautiful, overwhelming wave of pure spiritual fulfillment.",
     career: "Find deep artistic inspiration or a highly rewarding vocational calling.",
-    love: "Welcome a glorious, fresh emotional dawn or unconditional new romantic bond."
+    love: "Welcome a glorious, fresh emotional dawn or unconditional new romantic bond.",
+    keywordsReversed: "Blocked Emotions, Emptiness, Repression",
+    lifeReversed: "Emotional walls block the fulfillment you're quietly longing for.",
+    careerReversed: "Creative or emotional burnout leaves your usual inspiration running dry.",
+    loveReversed: "Guarded feelings or repressed emotion create distance instead of closeness."
   },
   {
     name: "Two of Cups", numeral: "2", suit: "cups",
     keywords: "Connection, Partnership, Alignment",
     life: "Nurture beautiful relationships based on deep mutual respect and equality.",
     career: "Form a highly harmonious, balanced business alliance rooted in shared ideals.",
-    love: "Enjoy a flawless soulmate connection with complete vulnerability and mutual devotion."
+    love: "Enjoy a flawless soulmate connection with complete vulnerability and mutual devotion.",
+    keywordsReversed: "Imbalance, Miscommunication, Break-up",
+    lifeReversed: "A key relationship feels imbalanced, unequal, or out of sync.",
+    careerReversed: "Miscommunication strains an important business partnership or alliance.",
+    loveReversed: "Growing apart or unequal effort threatens a once-close connection."
   },
   {
     name: "Three of Cups", numeral: "3", suit: "cups",
     keywords: "Celebration, Friendship, Community",
     life: "Gather with your precious inner circle to celebrate life's emotional riches.",
     career: "Collaborate joyfully with a creative, deeply supportive team of professionals.",
-    love: "Build a relationship full of social laughter, group support, and lightheartedness."
+    love: "Build a relationship full of social laughter, group support, and lightheartedness.",
+    keywordsReversed: "Overindulgence, Gossip, Isolation",
+    lifeReversed: "Overindulgence or superficial socializing leaves you feeling empty inside.",
+    careerReversed: "Office gossip or a fractured team spirit hurts collaboration.",
+    loveReversed: "Third-party interference or superficiality clouds an otherwise happy bond."
   },
   {
     name: "Four of Cups", numeral: "4", suit: "cups",
     keywords: "Apathy, Contemplation, Stagnation",
     life: "Look inward to understand your temporary sense of boredom and emotional discontent.",
     career: "Avoid completely overlooking fresh professional offers due to current mental apathy.",
-    love: "Shake off romantic stagnation to appreciate the quiet love being offered to you."
+    love: "Shake off romantic stagnation to appreciate the quiet love being offered to you.",
+    keywordsReversed: "Awakening, Renewed Interest, Missed Opportunity",
+    lifeReversed: "A jolt of awareness finally pulls you out of stubborn apathy.",
+    careerReversed: "Renewed motivation returns after you've overlooked one too many chances.",
+    loveReversed: "You finally notice the affection you'd been taking for granted."
   },
   {
     name: "Five of Cups", numeral: "5", suit: "cups",
     keywords: "Regret, Loss, Disappointment",
     life: "Acknowledge your genuine grief, but remember that beautiful things still remain.",
     career: "Move past a failed project or professional setback without obsessing over loss.",
-    love: "Turn away from past heartbreaks to see the love standing right beside you."
+    love: "Turn away from past heartbreaks to see the love standing right beside you.",
+    keywordsReversed: "Acceptance, Moving On, Forgiveness",
+    lifeReversed: "Acceptance and forgiveness finally loosen grief's grip on your heart.",
+    careerReversed: "You move past a setback, ready to try again with fresh eyes.",
+    loveReversed: "Healing begins as you finally let go of old heartbreak."
   },
   {
     name: "Six of Cups", numeral: "6", suit: "cups",
     keywords: "Nostalgia, Childhood, Healing",
     life: "Bring a simpler, gentler, and deeply innocent energy to your everyday routine.",
     career: "Revive a past artistic passion or reconnect with an encouraging old coworker.",
-    love: "Experience comfort through sweet nostalgia, childhood sweethearts, or inner child healing."
+    love: "Experience comfort through sweet nostalgia, childhood sweethearts, or inner child healing.",
+    keywordsReversed: "Stuck in the Past, Naivety, Unrealistic",
+    lifeReversed: "Living in nostalgia keeps you from fully embracing the present.",
+    careerReversed: "Outdated methods or old habits hold back current professional growth.",
+    loveReversed: "An ex or old pattern keeps pulling focus from your present relationship."
   },
   {
     name: "Seven of Cups", numeral: "7", suit: "cups",
     keywords: "Choices, Illusions, Fantasies",
     life: "Ground your floating daydreams before you get completely overwhelmed by options.",
     career: "Carefully analyze various career paths instead of chasing unrealistic professional illusions.",
-    love: "Look past superficial romantic fantasies to choose a grounded, real connection."
+    love: "Look past superficial romantic fantasies to choose a grounded, real connection.",
+    keywordsReversed: "Clarity, Realistic Choices, Overwhelm",
+    lifeReversed: "Illusions finally clear, revealing which options are actually worth pursuing.",
+    careerReversed: "Too many scattered options overwhelm your ability to choose wisely.",
+    loveReversed: "Clearer eyes help you separate real connection from wishful fantasy."
   },
   {
     name: "Eight of Cups", numeral: "8", suit: "cups",
     keywords: "Transition, Walking Away, Truth",
     life: "Make the tough choice to leave a familiar situation that no longer fulfills you.",
     career: "Walk away from an uninspiring job to seek your true spiritual calling.",
-    love: "Leave a stagnant emotional dynamic behind to pursue deeper soul evolution."
+    love: "Leave a stagnant emotional dynamic behind to pursue deeper soul evolution.",
+    keywordsReversed: "Fear of Change, Stagnation, Aimless Drifting",
+    lifeReversed: "Fear of the unknown keeps you clinging to an unfulfilling situation.",
+    careerReversed: "Indecision about leaving keeps you stuck in a draining role.",
+    loveReversed: "You know it's over, yet fear keeps you from truly walking away."
   },
   {
     name: "Nine of Cups", numeral: "9", suit: "cups",
     keywords: "Contentment, Gratitude, Satisfaction",
     life: "Bask in rich personal satisfaction and appreciate your current earthly blessings.",
     career: "Achieve exactly what you set out to build, enjoying high material comfort.",
-    love: "Experience the ultimate wish come true, leading to deep emotional security."
+    love: "Experience the ultimate wish come true, leading to deep emotional security.",
+    keywordsReversed: "Overindulgence, Dissatisfaction, Smugness",
+    lifeReversed: "Chasing more leaves you dissatisfied despite already having plenty.",
+    careerReversed: "Overconfidence or complacency dulls your drive for genuine growth.",
+    loveReversed: "Superficial satisfaction masks a deeper emotional need going unmet."
   },
   {
     name: "Ten of Cups", numeral: "10", suit: "cups",
     keywords: "Bliss, Harmony, Alignment",
     life: "Enjoy lasting peace as your internal world aligns perfectly with your environment.",
     career: "Thrive in an exceptionally supportive, caring corporate culture that feels like family.",
-    love: "Attain total romantic completion, domestic bliss, and absolute generational harmony."
+    love: "Attain total romantic completion, domestic bliss, and absolute generational harmony.",
+    keywordsReversed: "Disconnection, Broken Family, Misaligned Values",
+    lifeReversed: "Misaligned values create quiet discord beneath a picture-perfect surface.",
+    careerReversed: "A disconnect between your work and your true values causes unease.",
+    loveReversed: "Family tension or mismatched priorities disrupt domestic harmony."
   },
   {
     name: "Page of Cups", numeral: "11", suit: "cups",
     keywords: "Creativity, Sensitivity, Message",
     life: "Stay open-hearted and curious, ready for intuitive messages from the universe.",
     career: "Explore a surprising new creative outlet or artistic project without judgment.",
-    love: "Welcome sweet emotional news, a tender apology, or a poetic crush."
+    love: "Welcome sweet emotional news, a tender apology, or a poetic crush.",
+    keywordsReversed: "Emotional Immaturity, Insecurity, Blocked Creativity",
+    lifeReversed: "Emotional immaturity or self-doubt blocks your usual creative flow.",
+    careerReversed: "Overly sensitive reactions make honest workplace feedback hard to hear.",
+    loveReversed: "Mixed signals or immature behavior create confusing romantic static."
   },
   {
     name: "Knight of Cups", numeral: "12", suit: "cups",
     keywords: "Charm, Romance, Idealism",
     life: "Follow your sensitive heart and deep imagination wherever they gracefully lead.",
     career: "Present your artistic visions confidently, but stay grounded in practical execution.",
-    love: "Accept a classic romantic offer from a charming, deeply poetic suitor."
+    love: "Accept a classic romantic offer from a charming, deeply poetic suitor.",
+    keywordsReversed: "Moodiness, Unrealistic Expectations, Disappointment",
+    lifeReversed: "Moodiness or unmet idealism leaves you disillusioned with recent plans.",
+    careerReversed: "Unrealistic expectations or inconsistency undermine a creative pursuit.",
+    loveReversed: "Charm fades into flakiness, leaving romantic promises unfulfilled."
   },
   {
     name: "Queen of Cups", numeral: "13", suit: "cups",
     keywords: "Empathy, Intuition, Healing",
     life: "Act as a safe, highly compassionate harbor for your own tender emotions.",
     career: "Use your sharp emotional intelligence to navigate difficult corporate workplace diplomacy.",
-    love: "Offer profound non-judgmental empathy, binding your hearts with unbreakable spiritual glue."
+    love: "Offer profound non-judgmental empathy, binding your hearts with unbreakable spiritual glue.",
+    keywordsReversed: "Emotional Insecurity, Overwhelm, Codependency",
+    lifeReversed: "Overwhelming emotions blur the line between empathy and self-neglect.",
+    careerReversed: "Taking on others' problems leaves little energy for your own work.",
+    loveReversed: "Codependency or emotional overwhelm strains an otherwise caring bond."
   },
   {
     name: "King of Cups", numeral: "14", suit: "cups",
     keywords: "Balance, Diplomacy, Maturity",
     life: "Master your emotions completely, balancing deep intuition with cold, hard logic.",
     career: "Handle intense workplace crises with calm diplomacy and mature executive wisdom.",
-    love: "Provide a perfectly stable, emotionally secure space for your partner to thrive."
+    love: "Provide a perfectly stable, emotionally secure space for your partner to thrive.",
+    keywordsReversed: "Moodiness, Emotional Manipulation, Volatility",
+    lifeReversed: "Suppressed emotions surface unpredictably, disrupting your usual composure.",
+    careerReversed: "Emotional volatility undermines otherwise calm, diplomatic leadership.",
+    loveReversed: "Manipulation or moodiness destabilizes an otherwise steady partnership."
   },
-
-  // Suit of Swords
   {
     name: "Ace of Swords", numeral: "1", suit: "swords",
     keywords: "Clarity, Truth, Breakthrough",
     life: "A sudden flash of intense insight cuts cleanly through mental fog.",
     career: "Seize a powerful intellectual breakthrough to execute highly decisive career moves.",
-    love: "Cut through exhausting confusion by having a completely honest conversation."
+    love: "Cut through exhausting confusion by having a completely honest conversation.",
+    keywordsReversed: "Confusion, Miscommunication, Clouded Judgment",
+    lifeReversed: "Mental fog and confusion cloud a decision that needs real clarity.",
+    careerReversed: "Miscommunication or clouded judgment derails an important breakthrough.",
+    loveReversed: "Mixed messages replace the honest conversation you actually need."
   },
   {
     name: "Two of Swords", numeral: "2", suit: "swords",
     keywords: "Stalemate, Indecision, Avoidance",
     life: "Remove your self-imposed blindfold and face the difficult facts directly.",
     career: "Break an uncomfortable workplace stalemate by choosing a definitive strategic direction.",
-    love: "Stop avoiding an inevitable relationship choice out of fear of conflict."
+    love: "Stop avoiding an inevitable relationship choice out of fear of conflict.",
+    keywordsReversed: "Confusion, Information Overload, Forced Decision",
+    lifeReversed: "Overwhelming information makes an already difficult decision even harder.",
+    careerReversed: "A forced decision arrives before you feel truly ready to choose.",
+    loveReversed: "Avoidance can no longer delay an unavoidable relationship choice."
   },
   {
     name: "Three of Swords", numeral: "3", suit: "swords",
     keywords: "Heartbreak, Grief, Release",
     life: "Allow yourself to weep fully so true emotional healing can begin.",
     career: "Process the sudden, sharp disappointment of a lost business deal objectively.",
-    love: "Endure a painful separation or betrayal, clearing out toxic relational energy."
+    love: "Endure a painful separation or betrayal, clearing out toxic relational energy.",
+    keywordsReversed: "Healing, Forgiveness, Moving On",
+    lifeReversed: "Healing slowly replaces sharp grief as time softens the pain.",
+    careerReversed: "You recover from a professional setback and move forward wiser.",
+    loveReversed: "Forgiveness begins to mend a wound left by past heartbreak."
   },
   {
     name: "Four of Swords", numeral: "4", suit: "swords",
     keywords: "Rest, Recovery, Sanctuary",
     life: "Urgently withdraw from everyday chaos to rest your over-stressed mind.",
     career: "Take a deliberate, peaceful mental health day to prevent serious burnout.",
-    love: "Step back from ongoing romantic arguments to find quiet inner peace."
+    love: "Step back from ongoing romantic arguments to find quiet inner peace.",
+    keywordsReversed: "Restlessness, Burnout, Stagnation",
+    lifeReversed: "Restlessness returns before you've truly finished the rest you needed.",
+    careerReversed: "Ignoring burnout warning signs risks a much harder crash later.",
+    loveReversed: "Unresolved tension resurfaces once the temporary peace wears off."
   },
   {
     name: "Five of Swords", numeral: "5", suit: "swords",
     keywords: "Conflict, Hostility, Hollow Win",
     life: "Consider if winning an argument is truly worth destroying your peace.",
     career: "Navigate cutthroat corporate behavior carefully, avoiding petty office politics entirely.",
-    love: "Drop your pride before an aggressive fight leaves both partners defeated."
+    love: "Drop your pride before an aggressive fight leaves both partners defeated.",
+    keywordsReversed: "Reconciliation, Resentment, Moving Forward",
+    lifeReversed: "Reconciliation becomes possible once pride finally steps aside.",
+    careerReversed: "Lingering resentment from a past conflict still needs resolving.",
+    loveReversed: "Old wounds from an argument require honest repair, not avoidance."
   },
   {
     name: "Six of Swords", numeral: "6", suit: "swords",
     keywords: "Transition, Relief, Moving On",
     life: "Leave a chaotic situation behind to drift toward much calmer waters.",
     career: "Transition smoothly away from a stressful job toward a peaceful workplace.",
-    love: "Heal slowly as you leave a heavy, painful relationship dynamic behind."
+    love: "Heal slowly as you leave a heavy, painful relationship dynamic behind.",
+    keywordsReversed: "Resistance, Stuck, Unresolved Issues",
+    lifeReversed: "Resistance to change keeps you stuck in turbulent, familiar waters.",
+    careerReversed: "Unresolved issues follow you into a transition you thought was clean.",
+    loveReversed: "Difficulty letting go keeps you anchored to a draining situation."
   },
   {
     name: "Seven of Swords", numeral: "7", suit: "swords",
     keywords: "Strategy, Stealth, Deception",
     life: "Keep your plans strictly private and watch out for hidden motives.",
     career: "Use clever independence and quiet tactics to outsmart a professional challenge.",
-    love: "Address sneaky behavior or a serious lack of trust before it worsens."
+    love: "Address sneaky behavior or a serious lack of trust before it worsens.",
+    keywordsReversed: "Confession, Conscience, Exposure",
+    lifeReversed: "A hidden truth finally comes to light, easing a guilty conscience.",
+    careerReversed: "Deceptive tactics get exposed, forcing an overdue honest reckoning.",
+    loveReversed: "Secrets come out, testing whether trust can be rebuilt."
   },
   {
     name: "Eight of Swords", numeral: "8", suit: "swords",
     keywords: "Trapped, Anxiety, Illusion",
     life: "Realize your binds are loose and you can walk away anytime.",
     career: "Overcome a victim mentality regarding a job you actually have power to leave.",
-    love: "Recognize that your own mental fears are creating a prison of romantic helplessness."
+    love: "Recognize that your own mental fears are creating a prison of romantic helplessness.",
+    keywordsReversed: "Release, Self-Empowerment, New Perspective",
+    lifeReversed: "A new perspective finally reveals a way out of self-imposed limits.",
+    careerReversed: "You regain the confidence to leave a role that was holding you back.",
+    loveReversed: "Freeing yourself from fear opens space for a healthier connection."
   },
   {
     name: "Nine of Swords", numeral: "9", suit: "swords",
     keywords: "Anxiety, Worry, Insomnia",
     life: "Ground yourself to realize most middle-of-the-night terrors are completely imaginary.",
     career: "Stop letting worst-case scenarios ruin your sleep and focus on objective facts.",
-    love: "Reach out for support instead of suffering in a cycle of silent relationship anxiety."
+    love: "Reach out for support instead of suffering in a cycle of silent relationship anxiety.",
+    keywordsReversed: "Relief, Reaching Out, Facing Fears",
+    lifeReversed: "Relief arrives once you finally speak your fears out loud.",
+    careerReversed: "Reaching out for support eases work-related stress you'd kept hidden.",
+    loveReversed: "Naming your anxieties honestly brings welcome relief to the relationship."
   },
   {
     name: "Ten of Swords", numeral: "10", suit: "swords",
     keywords: "Rock Bottom, Endings, Dawn",
     life: "Accept a crushing ending, knowing that you can only go up from here.",
     career: "A difficult project or role has finished permanently; prepare for a fresh start.",
-    love: "Let a broken relationship hit rock bottom so a new dawn can emerge."
+    love: "Let a broken relationship hit rock bottom so a new dawn can emerge.",
+    keywordsReversed: "Recovery, Resistance to Change, Slow Improvement",
+    lifeReversed: "Recovery begins slowly as the worst of the pain passes.",
+    careerReversed: "Resisting an obvious ending only draws out an already painful chapter.",
+    loveReversed: "Slow healing follows a painful ending you're still processing."
   },
   {
     name: "Page of Swords", numeral: "11", suit: "swords",
     keywords: "Agility, Curiosity, Objectivity",
     life: "Speak your intellectual truths clearly and gather data with fierce objectivity.",
     career: "Bring brilliant, analytical ideas and sharp communication skills to your team.",
-    love: "Keep your communication energetic, logical, and entirely free from heavy emotional drama."
+    love: "Keep your communication energetic, logical, and entirely free from heavy emotional drama.",
+    keywordsReversed: "Gossip, Scattered Thoughts, All Talk",
+    lifeReversed: "Scattered thinking makes it hard to focus on any single truth.",
+    careerReversed: "All talk and little follow-through undercuts a promising idea.",
+    loveReversed: "Gossip or sharp words create unnecessary friction in the relationship."
   },
   {
     name: "Knight of Swords", numeral: "12", suit: "swords",
     keywords: "Ambition, Speed, Logic",
     life: "Charge headfirst toward your goals using pure, blinding intellectual energy.",
     career: "Execute sudden business plans masterfully, but avoid running over your coworkers.",
-    love: "Communicate with intense directness, though be careful not to sound insensitive."
+    love: "Communicate with intense directness, though be careful not to sound insensitive.",
+    keywordsReversed: "Recklessness, Impatience, Aggression",
+    lifeReversed: "Reckless haste creates avoidable mistakes you'll later need to fix.",
+    careerReversed: "Impatience or aggression alienates colleagues who could otherwise help.",
+    loveReversed: "Blunt or impatient words land harder than you intended."
   },
   {
     name: "Queen of Swords", numeral: "13", suit: "swords",
     keywords: "Objectivity, Wit, Boundaries",
     life: "Cut through lies and illusions using total logic and absolute honesty.",
     career: "Establish unshakeable professional boundaries and demand clear, truthful corporate metrics.",
-    love: "Love with total transparency, requiring absolute intellectual honesty from your partner."
+    love: "Love with total transparency, requiring absolute intellectual honesty from your partner.",
+    keywordsReversed: "Coldness, Bitterness, Cruelty",
+    lifeReversed: "Guardedness hardens into coldness that pushes genuine connection away.",
+    careerReversed: "Overly harsh criticism damages relationships you actually need intact.",
+    loveReversed: "Sharp words or emotional distance create a wall between you two."
   },
   {
     name: "King of Swords", numeral: "14", suit: "swords",
     keywords: "Authority, Truth, Logic",
     life: "Lead through strict ethical standards and analytical reasoning above all else.",
     career: "Make an impartial, highly logical judgment regarding a complex workplace dilemma.",
-    love: "Remove emotional hysterics to evaluate your relationship with absolute fairness."
+    love: "Remove emotional hysterics to evaluate your relationship with absolute fairness.",
+    keywordsReversed: "Abuse of Power, Manipulation, Rigidity",
+    lifeReversed: "Rigid thinking or an abuse of authority creates unnecessary conflict.",
+    careerReversed: "Manipulative tactics or excessive control damage team trust.",
+    loveReversed: "Coldness or manipulation undermines what should be an honest partnership."
   },
-
-  // Suit of Pentacles
   {
     name: "Ace of Pentacles", numeral: "1", suit: "pentacles",
     keywords: "Prosperity, Abundance, Grounding",
     life: "Receive a tangible, highly fortunate seed of physical growth from the universe.",
     career: "Accept an excellent new job offer or lucrative business foundation patiently.",
-    love: "Build a deeply grounded, stable relationship that promises long-term physical comfort."
+    love: "Build a deeply grounded, stable relationship that promises long-term physical comfort.",
+    keywordsReversed: "Missed Opportunity, Instability, Poor Planning",
+    lifeReversed: "A missed opportunity or poor planning delays real material progress.",
+    careerReversed: "An unstable offer or lost opportunity requires careful reconsideration.",
+    loveReversed: "Instability or mismatched priorities threaten a secure future together."
   },
   {
     name: "Two of Pentacles", numeral: "2", suit: "pentacles",
     keywords: "Balance, Adaptability, Priorities",
     life: "Adapt dynamically to life's ever-shifting daily responsibilities and priorities.",
     career: "Juggle multiple tasks, investments, or career roles with flexible grace.",
-    love: "Maintain your sense of humor while balancing dates with a busy schedule."
+    love: "Maintain your sense of humor while balancing dates with a busy schedule.",
+    keywordsReversed: "Overwhelm, Disorganization, Imbalance",
+    lifeReversed: "Overcommitment leaves your priorities scattered and hard to manage.",
+    careerReversed: "Poor organization causes important tasks or deadlines to slip.",
+    loveReversed: "Juggling too much leaves little quality time for your relationship."
   },
   {
     name: "Three of Pentacles", numeral: "3", suit: "pentacles",
     keywords: "Collaboration, Mastery, Teamwork",
     life: "Achieve meaningful success by listening closely to other talented individuals.",
     career: "Combine diverse professional skills to build a high-quality cornerstone project.",
-    love: "Work together smoothly to construct a solid, deeply cooperative life partnership."
+    love: "Work together smoothly to construct a solid, deeply cooperative life partnership.",
+    keywordsReversed: "Disharmony, Misalignment, Lack of Teamwork",
+    lifeReversed: "Poor collaboration or misaligned goals slow meaningful progress.",
+    careerReversed: "A lack of teamwork undermines an otherwise promising group project.",
+    loveReversed: "Working toward different goals creates friction in a shared plan."
   },
   {
     name: "Four of Pentacles", numeral: "4", suit: "pentacles",
     keywords: "Stability, Control, Scarcity",
     life: "Loosen your over-controlling grip on your surroundings to let fresh energy flow.",
     career: "Protect your financial security, but avoid resisting necessary corporate changes out of fear.",
-    love: "Stop hoarding your emotions or suffocating your partner with extreme possessiveness."
+    love: "Stop hoarding your emotions or suffocating your partner with extreme possessiveness.",
+    keywordsReversed: "Greed, Materialism, Letting Go",
+    lifeReversed: "An overly tight grip on control keeps abundance from flowing freely.",
+    careerReversed: "Fear of loss makes you resistant to a necessary financial risk.",
+    loveReversed: "Possessiveness or stinginess with affection creates emotional distance."
   },
   {
     name: "Five of Pentacles", numeral: "5", suit: "pentacles",
     keywords: "Hardship, Isolation, Scarcity",
     life: "Look up from your immediate struggle; warm support is incredibly close by.",
     career: "Weather a temporary financial loss or workplace isolation by seeking community help.",
-    love: "Stick together through tough economic times rather than pushing each other away."
+    love: "Stick together through tough economic times rather than pushing each other away.",
+    keywordsReversed: "Recovery, Support, Improvement",
+    lifeReversed: "Recovery is underway as outside support eases past financial hardship.",
+    careerReversed: "A stable opportunity finally arrives after a difficult stretch.",
+    loveReversed: "Reconnecting with support systems eases past relationship isolation."
   },
   {
     name: "Six of Pentacles", numeral: "6", suit: "pentacles",
     keywords: "Generosity, Sharing, Balance",
     life: "Participate joyfully in a beautiful, balanced ecosystem of mutual support.",
     career: "Seek out an encouraging professional mentor or generously share your resource wealth.",
-    love: "Enjoy a relationship where emotional giving and receiving are in perfect balance."
+    love: "Enjoy a relationship where emotional giving and receiving are in perfect balance.",
+    keywordsReversed: "Debt, Selfishness, Imbalance",
+    lifeReversed: "An imbalance of giving and receiving leaves you feeling shortchanged.",
+    careerReversed: "Strings-attached generosity or unpaid debts complicate a work relationship.",
+    loveReversed: "One-sided giving creates resentment where balance should exist."
   },
   {
     name: "Seven of Pentacles", numeral: "7", suit: "pentacles",
     keywords: "Patience, Assessment, Harvest",
     life: "Pause to review your overall progress before doing any more exhausting work.",
     career: "Trust that your professional investments require long-term vision to ripen fully.",
-    love: "Allow your shared connection to grow naturally without rushing milestones impatiently."
+    love: "Allow your shared connection to grow naturally without rushing milestones impatiently.",
+    keywordsReversed: "Impatience, Lack of Reward, Distraction",
+    lifeReversed: "Impatience tempts you to abandon efforts right before they pay off.",
+    careerReversed: "Slow results test your patience with a long-term investment.",
+    loveReversed: "Frustration grows as the relationship's progress feels slower than hoped."
   },
   {
     name: "Eight of Pentacles", numeral: "8", suit: "pentacles",
     keywords: "Diligence, Craft, Mastery",
     life: "Diligently hone your personal development skills with extreme attention to detail.",
     career: "Commit fully to learning a craft; your repetitive effort guarantees massive expertise.",
-    love: "Work continuously and consciously on building a healthy daily relationship routine."
+    love: "Work continuously and consciously on building a healthy daily relationship routine.",
+    keywordsReversed: "Perfectionism, Lack of Focus, Mediocrity",
+    lifeReversed: "Perfectionism or scattered focus stalls the mastery you're chasing.",
+    careerReversed: "Cutting corners now risks quality you'll need to fix later.",
+    loveReversed: "Complacency replaces the consistent effort the relationship needs."
   },
   {
     name: "Nine of Pentacles", numeral: "9", suit: "pentacles",
     keywords: "Self-Reliance, Luxury, Independent",
     life: "Enjoy the beautiful, secure life you created through your own discipline.",
     career: "Thrive as a highly successful, independent operator who answers to no one.",
-    love: "Appreciate your own space, choosing a partner only if they elevate your comfort."
+    love: "Appreciate your own space, choosing a partner only if they elevate your comfort.",
+    keywordsReversed: "Overwork, Financial Setback, Dependence",
+    lifeReversed: "Overwork threatens the independence you've worked so hard to build.",
+    careerReversed: "A financial setback interrupts your usual sense of self-sufficiency.",
+    loveReversed: "Codependency chips away at the independence you value."
   },
   {
     name: "Ten of Pentacles", numeral: "10", suit: "pentacles",
     keywords: "Legacy, Wealth, Foundation",
     life: "Establish secure, enduring structural stability that honors your family roots.",
     career: "Build massive, long-term generational wealth or celebrate major company permanence.",
-    love: "Enjoy a deeply traditional romance supported by strong, loving family approval."
+    love: "Enjoy a deeply traditional romance supported by strong, loving family approval.",
+    keywordsReversed: "Family Disputes, Instability, Broken Legacy",
+    lifeReversed: "Family disputes or financial instability shake a once-solid foundation.",
+    careerReversed: "Unstable finances or unresolved disputes threaten long-term security.",
+    loveReversed: "Family disagreements strain what should be a stable partnership."
   },
   {
     name: "Page of Pentacles", numeral: "11", suit: "pentacles",
     keywords: "Ambition, Manifest, Planning",
     life: "Approach your personal goals with a practical, step-by-step physical mindset.",
     career: "Welcome a highly promising entry-level financial opportunity or technical course.",
-    love: "Lay down reliable, very practical plans for a secure romantic future together."
+    love: "Lay down reliable, very practical plans for a secure romantic future together.",
+    keywordsReversed: "Procrastination, Unrealistic Plans, Lack of Progress",
+    lifeReversed: "Procrastination keeps practical goals stuck in the planning stage.",
+    careerReversed: "Unrealistic plans or a lack of follow-through stall a new venture.",
+    loveReversed: "Grand romantic promises stall without any real, practical follow-up."
   },
   {
     name: "Knight of Pentacles", numeral: "12", suit: "pentacles",
     keywords: "Reliability, Routine, Grind",
     life: "Dedicate yourself to a steady daily grind, honoring every single commitment.",
     career: "Guarantee ultimate project completion through methodical, highly organized hard work.",
-    love: "Provide absolute, unshakeable loyalty and dependable romantic devotion every day."
+    love: "Provide absolute, unshakeable loyalty and dependable romantic devotion every day.",
+    keywordsReversed: "Stagnation, Boredom, Stubbornness",
+    lifeReversed: "Rigid routine tips into stagnation, leaving little room to grow.",
+    careerReversed: "Stubborn resistance to new methods slows otherwise steady progress.",
+    loveReversed: "Predictability turns to boredom without room for spontaneity."
   },
   {
     name: "Queen of Pentacles", numeral: "13", suit: "pentacles",
     keywords: "Nurturing, Security, Comfort",
     life: "Balance sharp business savvy with a warm, comforting domestic sanctuary.",
     career: "Manage corporate resources practically while taking excellent care of your team.",
-    love: "Create a cozy, materially secure home oasis alongside your beloved partner."
+    love: "Create a cozy, materially secure home oasis alongside your beloved partner.",
+    keywordsReversed: "Self-Neglect, Smothering, Work-Life Imbalance",
+    lifeReversed: "Neglecting your own needs while caring for others depletes you.",
+    careerReversed: "Work-life imbalance leaves little energy for the people you love.",
+    loveReversed: "Smothering care crowds out your partner's need for independence."
   },
   {
     name: "King of Pentacles", numeral: "14", suit: "pentacles",
     keywords: "Mastery, Abundance, Enterprise",
     life: "Use your hard-won earthly success to build a secure, flourishing environment.",
     career: "Lead your commercial business empire with steady, exceptionally reliable financial wisdom.",
-    love: "Act as a generous, unshakeable provider who keeps the relationship completely stable."
+    love: "Act as a generous, unshakeable provider who keeps the relationship completely stable.",
+    keywordsReversed: "Greed, Poor Financial Judgment, Overwork",
+    lifeReversed: "Chasing more at any cost undermines the stability you already built.",
+    careerReversed: "Poor financial judgment or overwork jeopardizes hard-won success.",
+    loveReversed: "Prioritizing status over connection leaves your partner feeling secondary."
   }
 ];
 // ─── REAL CARD ARTWORK (public-domain Rider-Waite-Smith deck, embedded as base64) ──
@@ -1401,7 +1703,12 @@ function drawCards() {
   clarifiers = {};
 
   const shuffled = [...tarotDeck].sort(() => Math.random() - 0.5);
-  drawnCards = shuffled.slice(0, currentSpread);
+  // Copy each card and randomly assign an upright/reversed orientation
+  // (copied so we never mutate the shared tarotDeck objects)
+  drawnCards = shuffled.slice(0, currentSpread).map(card => ({
+    ...card,
+    reversed: Math.random() < 0.5
+  }));
   const labels = currentSpread === 3 ? ['Past', 'Present', 'Future'] : ['Your Card'];
 
   drawnCards.forEach((card, i) => {
@@ -1410,6 +1717,8 @@ function drawCards() {
     container.style.animationDelay = (i * 0.2) + 's';
     container.style.width  = '160px';
     container.style.height = '280px';
+
+    const artTransform = card.reversed ? 'transform:rotate(180deg);' : '';
 
     container.innerHTML = `
       <div class="card-inner w-full h-full relative" id="card-${i}">
@@ -1423,9 +1732,10 @@ function drawCards() {
         </div>
         <!-- FRONT FACE -->
         <div class="card-face card-face-front card-front flex flex-col items-center p-2 overflow-hidden">
-          <div style="flex:1; display:flex; align-items:center; justify-content:center;">
+          <div style="flex:1; display:flex; align-items:center; justify-content:center; ${artTransform}">
             ${getCardVisual(card)}
           </div>
+          ${card.reversed ? `<p class="text-xs uppercase tracking-widest" style="color:#a07c3a; letter-spacing:1px;">Reversed</p>` : ''}
         </div>
       </div>`;
 
@@ -1453,7 +1763,7 @@ function drawClarifier(i) {
   if (pool.length === 0) pool = tarotDeck;
 
   const card = pool[Math.floor(Math.random() * pool.length)];
-  clarifiers[i].push(card);
+  clarifiers[i].push({ ...card, reversed: Math.random() < 0.5 });
 
   // Vẽ lại phần đọc bài nhưng không lật lại các lá chính
   showReading(true);
@@ -1466,19 +1776,29 @@ function flipCard(index) {
 
 // ─── CARD MEANING RENDER ───────────────────────────────────────────────────────
 function renderCardMeaning(card) {
+  const reversed = !!card.reversed;
+  const keywords = reversed ? card.keywordsReversed : card.keywords;
+  const life      = reversed ? card.lifeReversed     : card.life;
+  const career    = reversed ? card.careerReversed   : card.career;
+  const love      = reversed ? card.loveReversed     : card.love;
+
   return `
+    ${reversed ? `
+    <p class="text-xs uppercase tracking-widest mb-1" style="color:#c47a7a; letter-spacing:1px;">
+      ✦ Reversed
+    </p>` : ''}
     <p class="text-sm uppercase tracking-widest mb-3"
        style="color:#a07c3a; letter-spacing:1px;">
-      ${card.keywords}
+      ${keywords}
     </p>
     <p class="text-base leading-relaxed mb-2" style="color:#cbd5e0;">
-      <span style="color:#c9a961; font-weight:600;">Life —</span> ${card.life}
+      <span style="color:#c9a961; font-weight:600;">Life —</span> ${life}
     </p>
     <p class="text-base leading-relaxed mb-2" style="color:#cbd5e0;">
-      <span style="color:#c9a961; font-weight:600;">Career —</span> ${card.career}
+      <span style="color:#c9a961; font-weight:600;">Career —</span> ${career}
     </p>
     <p class="text-base leading-relaxed" style="color:#cbd5e0;">
-      <span style="color:#c9a961; font-weight:600;">Love —</span> ${card.love}
+      <span style="color:#c9a961; font-weight:600;">Love —</span> ${love}
     </p>
   `;
 }
@@ -1511,6 +1831,7 @@ function showReading(skipFlip = false) {
 
         // Ảnh minh họa lá clarifier, thu nhỏ còn 2/3 kích thước lá bài chính (140x220 -> ~93x147)
         const clarifierSVG = getCardVisual(clarifier, 100, 175);
+        const clarifierTransform = clarifier.reversed ? 'transform:rotate(180deg);' : '';
 
         clarifierHTML += `
           <div class="mt-5 p-4 rounded-lg flex flex-wrap sm:flex-nowrap items-start gap-4 text-left"
@@ -1518,7 +1839,7 @@ function showReading(skipFlip = false) {
                  border-left:3px solid #c9a961;
                  background:rgba(201,169,97,0.05);">
 
-            <div class="flex-shrink-0 mx-auto sm:mx-0" style="border-radius:8px; overflow:hidden; box-shadow:0 4px 12px rgba(0,0,0,0.4);">
+            <div class="flex-shrink-0 mx-auto sm:mx-0" style="border-radius:8px; overflow:hidden; box-shadow:0 4px 12px rgba(0,0,0,0.4); ${clarifierTransform}">
               ${clarifierSVG}
             </div>
 
@@ -1532,7 +1853,7 @@ function showReading(skipFlip = false) {
                   style="
                     color:#c9a961;
                     font-family:'Marck Script',serif;">
-                ${clarifier.name}
+                ${clarifier.name}${clarifier.reversed ? ' <span style="font-family:\'EB Garamond\',serif; font-size:0.7em; color:#c47a7a;">(Reversed)</span>' : ''}
               </h4>
 
               ${renderCardMeaning(clarifier)}
@@ -1561,7 +1882,7 @@ function showReading(skipFlip = false) {
             style="
               color:#c9a961;
               font-family:'Marck Script',serif;">
-          ${card.name}
+          ${card.name}${card.reversed ? ' <span style="font-family:\'EB Garamond\',serif; font-size:0.65em; color:#c47a7a;">(Reversed)</span>' : ''}
         </h3>
 
         <div class="mb-4">
